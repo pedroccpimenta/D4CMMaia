@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 //header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Origin: *");
 header('Access-Control-Allow-Methods: GET, POST');
@@ -8,6 +8,7 @@ header('Access-Control-Allow-Methods: GET, POST');
 header('Content-type: application/json;charset=utf-8');
 //header("Content-type: text/html; charset=utf-8");
 //header("Access-Control-Allow-Origin: '*'");
+
 
 if (isset($_SERVER['HTTP_ORIGIN'])) {
         // Decide if the origin in $_SERVER['HTTP_ORIGIN'] is one
@@ -30,16 +31,32 @@ if (isset($_SERVER['HTTP_ORIGIN'])) {
         exit(0);
     }
 
+
 require 'credentials.php';
+
+
+function add($a, $b)
+{
+  return $a + $b;
+}
+
+function pac($str, $t)
+{     
+    // $s2 = mb_strlen($str) <= $t ? $str : substr($str, 0, $t-8)."(...)";
+    $s2 = strlen($str) <= $t-2 ? $str : substr($str, 0, $t-6)."(..)";
+    $s3='"'.$s2.'"';
+    for ($y=mb_strlen($s3);$y<$t;$y++) $s3=$s3." ";
+    return $s3;
+}
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, "BAZE");
+$conn->set_charset("utf8");
 
 // Check connection
 if ($conn->connect_error) 
-  {
-    die("'r':'".  $conn->connect_error . "'");
-  }
+{ die("'r':'".  $conn->connect_error . "'");
+}
 
 //printf("Initial character set: %s\n", mysqli_character_set_name($conn));
 //mysqli_set_charset($conn, "utf8mb4");
@@ -60,46 +77,53 @@ else
 { $formato="JSON";
 }
 
-
+//echo $formato;
 $sql="select * from fonte where nome='".$nome."'";
-    // echo $sql;
+// echo $sql;
 $result= mysqli_query($conn,$sql);
-//    echo "Resul".$result.FLINHA;
-//  echo $result;
 
-flush();
+
+flush(); 
 
 if (mysqli_num_rows($result) > 0 and $nome!=false) {
+  $sql="select ano, `C".$nome."` from baze21RA order by ano";  
 
-
-// echo "TEMOS VALOR";
- 
-  $sql="select ano, ".$nome." from baze21RA order by ano";  
+//  echo ($sql);
   $result2= mysqli_query($conn,$sql);
+ 
   $data="[";
   $valor="[";
   $nsd=mysqli_num_rows($result2);
 
-if ($formato=="CSV")
+if ($formato=="CSV" or $formato=="csv")
 {   
   echo "Ano, ".$nome.PHP_EOL;
   while($row = mysqli_fetch_assoc($result2)) 
-  { $tv=$row[$nome]===NULL ? "null" : $row[$nome];
+  { $tv=$row['C'.$nome]===NULL ? "null" : $row['C'.$nome];
     echo $row['ano'].", ".$tv.PHP_EOL;
   }  
 }
 else
 {
   $si=0;
+  $anv=false;
   while($row = mysqli_fetch_assoc($result2)) 
-  {   $data=$data.$row["ano"];
-      $tv=$row[$nome]===NULL ? "null" : $row[$nome];
+  {
+    $si++;
+    if ($row['C'.$nome]===NULL && $anv==false)
+    {}
+    else  
+    { $anv=true;
+     $data=$data.$row["ano"];
+
+      $tv=$row['C'.$nome]===NULL ? "null" : $row['C'.$nome];
       $valor=$valor.$tv;
-      $si++;
-      if ($si<$nsd)
+    
+      if ($si<$nsd) 
       {  $data=$data.", "; 
          $valor=$valor.", ";
       }
+    }
   }   
   $data=$data."],"; 
   $valor=$valor."]";
@@ -108,23 +132,31 @@ else
     echo ' "v":'.$valor.",".PHP_EOL;
 }
 
-if (9==9)
-{
+
 
 $row = mysqli_fetch_assoc($result);
     $nome=utf8_encode($row['nome']);
       $desc=utf8_encode( $row['descri']);
+      $desc=$row['descri'];
+      
       $comm=utf8_encode( $row['Comm']);
       $dato=utf8_encode( $row['RegDate']);
       $editor =utf8_encode( $row['editor']);
-      $fonte =utf8_encode( $row['fonte']);
+      $fonte =utf8_encode( $row['origem']);
 
 
 echo '    "metadata":{'.PHP_EOL;
 echo '          "nome":"'.$nome.'", '.PHP_EOL;			
 echo '          "descrição":"'.$desc.'", '.PHP_EOL;			
-echo '          "Editor":"'.$editor.'", '.PHP_EOL;			
-echo '          "fonte":"'.$fonte.'", '.PHP_EOL;			
+echo '          "descri+":"'.$row['DescriPlus'].'", '.PHP_EOL;      
+echo '          "fonte":"'.$fonte.'", '.PHP_EOL;      
+echo '          "MetaInfUrl":"'.$row["MetaInfUrl"].'", '.PHP_EOL;      
+echo '          "UltimoPref":"'.$row["UltimoPref"].'", '.PHP_EOL;			
+echo '          "DataUltimaActual":"'.$row["DataUltimaActual"].'", '.PHP_EOL;      
+echo '          "DataUltimaActuaLocal":"'.$row["DataUltimaActuaLocal"].'", '.PHP_EOL;      
+echo '          "DataUltimaVerifica":"'.$row["DataUltimaVerifica"].'", '.PHP_EOL;      
+
+echo '          "Editor":"'.$editor.'", '.PHP_EOL;      
 echo '          "comm":"'.$comm.'" '.PHP_EOL;			
 echo '               },'.PHP_EOL;
 echo '    "source":{'.PHP_EOL; 
@@ -134,27 +166,28 @@ echo '       "JSON validado em": ["https://www.itb.ec.europa.eu/json/any/upload"
 echo '     }'.PHP_EOL;
 
 
- }
+
 
     echo "}";  
 
-}
+}     /// Se não encontrámos a série pedida...
 else
 {
-  $formatolinha='         ["%`»15.15s", "%30.30s", "%12.12s", "%30s", "%30s"], ';
-  // code...
-  //  echo "ci siamo";  
-  echo '{'.PHP_EOL.'    "título": "BaZe datalake  - Séries disponíveis",'.PHP_EOL;
+  echo '{'.PHP_EOL.'    "título": "BaZe datalake  - Séries disponíveis (relativas ao Concelho da Maia)",'.PHP_EOL;
   echo '    "o": ['.PHP_EOL;
   
-  //printf($formatolinha.PHP_EOL, "Nome", "Descrição", "Fonte", "Data edição", "Editor");
-  printf( '         ["Nome"'.str_pad("", 15-strlen("Nome"), " "));
-  print(', "Descrição"'.str_pad("", 43-mb_strlen("Descrição"), " "));
-  print(', "Fonte"'.str_pad("", 25-strlen("Fonte"), " "));
- // print(', "Data"'.str_pad("", 18-strlen("Data"), " ")." ");
-  print(', "Comentário"'.str_pad("", 19-mb_strlen("Comentário"), " "));
+  printf( '         ['.pac('Código', 14));
+
+  print(', '.pac('Descrição', 40));
+  print(', '.pac('Fonte', 9));
+  print(', '.pac('Últ. ano', 11));
+  print(', '.pac('Data act. fonte', 17));
+  print(', '.pac('Data act. local', 21));
+  print(', '.pac('Data ult. sinc.', 21));
+
   print('],'.PHP_EOL);  
   $sql="select * from fonte  where status not like 'indisp%' order by nome" ;
+  $sql="select * from fonte  where status like 'disp%' order by nome" ;
 
   $result= mysqli_query($conn,$sql);
   $nr=mysqli_num_rows($result);
@@ -166,36 +199,38 @@ else
   {   // output data of each row
       //echo '<br>'.FLINHA.'"dados":[<br>';
       $nome=utf8_encode($row['nome']);
-      $desc=utf8_encode( $row['descri']);
+      $descri=utf8_encode( $row['descri']);
+      $descri= $row['descri'];
+      $descriplus=utf8_encode( $row['DescriPlus']);
+      $MetaInfoUrl=utf8_encode( $row['MetaInfUrl']);
+      $DataUltimaActual=utf8_encode( $row['DataUltimaActual']);
+      $DataUltimaActuaLocal=utf8_encode( $row['DataUltimaActuaLocal']);
+      $DataUltimaVerifica=utf8_encode( $row['DataUltimaVerifica']);
+      $UltimoPref=utf8_encode( $row['UltimoPref']);
       $comm=utf8_encode( $row['Comm']);
-      $dato=utf8_encode( $row['RegDate']);
       $editor =utf8_encode( $row['editor']);
-      $fonte =utf8_encode( $row['fonte']);
 
+      $fonte =utf8_encode( $row['fonte']);  // deprecated
+      $origem =utf8_encode( $row['origem']);
+
+      $dato=utf8_encode( $row['RegDate']);  // just for internal checking
+      
 
       if ($fonte=="")      {$fonte="N/A";}
       if ($dato=="")      {$dato="N/A";}
       if ($editor=="")      {$editor="N/A";}
       if ($comm=="")      {$comm="N/A";}
+    
+      printf ('         ['.pac($nome, 14).', ');
+      printf (pac($descri, 40).', ');
+      printf (pac($origem, 9).', ');
+      printf (pac($UltimoPref, 11).', ');
 
+      printf (pac($DataUltimaActual, 17).', ');
+      printf (pac($DataUltimaActuaLocal, 21).', ');
+      printf (pac($DataUltimaVerifica, 21));
 
-     // printf($formatolinha, $nome, $desc, $fonte, $dato, $editor);
-     // echo strlen($nome).PHP_EOL;
-      $n2p = mb_strlen($nome) < 15 ? $nome : substr($nome, 0, 10)."(...)";
-      printf ('         ["'.$nome.'"'.str_pad("", 15-mb_strlen($nome)).', ');
-      
-      $d2p = mb_strlen($desc) <= 43 ? $desc."" : substr($desc, 0, 38)."(...)";
-      printf ('"'.$d2p.'"'.str_pad("", 43-mb_strlen($d2p), " ").', ');
-      
-      $f2p = mb_strlen($fonte) <= 25 ? $fonte : substr($fonte, 0, 20)."(...)";
-      printf ('"'.$f2p.'"'.str_pad(" ", 25-mb_strlen($f2p)).', ');
-      
-      $d2p = mb_strlen($dato) < 20 ? $dato : substr($dato, 0, 15)."(...)";
-   //   printf ('"'.$d2p.'"'.str_pad("", 19-strlen($d2p)).', ');
-      $c2p = mb_strlen($comm) <= 50 ? $comm : substr($comm, 0, 45)."(...)";
-      printf ('"'.$c2p.'"'.str_pad(" ", 50-mb_strlen($c2p)).']');
-
-    //  	printf(PHP_EOL.".".$desc.".".PHP_EOL);
+      print ("]");  
 
       if ($i < $nr)
       {   echo ',';
@@ -214,7 +249,6 @@ if (9==9)
 echo '    "api url": "http://baze.cm-maia.pt/BaZe/api/api4s.php",'.PHP_EOL;
 echo '    "exemplo": "http://baze.cm-maia.pt/BaZe/api/api4s.php?nome=nhabit",'.PHP_EOL;
 echo '    "JSON validado em": ["https://www.itb.ec.europa.eu/json/any/upload","https://jsonlint.com/"]'.PHP_EOL;
-//echo '    "GeoJSON validado em": ["https://www.itb.ec.europa.eu/json/geojson/upload", "https://geojsonlint.com/", "https://geojson.io/"]'.PHP_EOL;
  }
 
  echo "}";

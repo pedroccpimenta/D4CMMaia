@@ -1,12 +1,12 @@
-<?php
+﻿<?php
 //header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Origin: *");
 header('Access-Control-Allow-Methods: GET, POST');
 
-
-//Response.AddHeader("Access-Control-Allow-Origin", "*"); 
+  //Response.AddHeader("Access-Control-Allow-Origin", "*"); 
 
 header('Content-type: application/json;charset=utf-8');
+
 //header("Content-type: text/html; charset=utf-8");
 //header("Access-Control-Allow-Origin: '*'");
 
@@ -32,14 +32,12 @@ if (isset($_SERVER['HTTP_ORIGIN'])) {
     }
 
 
-
-define ("FLINHA", CHR(13).CHR(10));
-
 require 'credentials.php';
-
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, "BAZE");
+$conn->set_charset("utf8");
+
 
 // Check connection
 if ($conn->connect_error) 
@@ -57,7 +55,9 @@ if ($conn->connect_error)
 $nome = false;
 
 if(isset($_GET['nome'])){
+
     $nome = utf8_encode($_GET['nome']);
+
 }
 else
 {	$nome=null;
@@ -73,14 +73,17 @@ switch (strtoupper($nome)) {
 	fclose($myfile);
 
 	break;
-
+/*    case "TPWAPI":
+      header("Location: http://baze.cm-maia.pt/BaZe/api/testepontos.php?fonte=WeatherAPI"); 
+    exit();
+*/
 	default:
 		# code...
 
 $sql="select * from GJSON where nome='".$nome."'";
     // echo $sql;
 $result= mysqli_query($conn,$sql);
-//    echo "Resul".$result.FLINHA;
+//    echo "Resul".$result.PHP_EOL;
 //  echo $result;
 
 flush();
@@ -90,27 +93,27 @@ if (mysqli_num_rows($result) > 0 and $nome!=false) {
 // echo "TEMOS VALOR";
   while($row = mysqli_fetch_assoc($result)) 
   {// output data of each row
-  //echo '<br>'.FLINHA.'"dados":[<br>';
+  //echo '<br>'.PHP_EOL.'"dados":[<br>';
   echo $row['valor'];
   }   
 }
 else {
   // code...
   //  echo "ci siamo";  
-  echo '{'.FLINHA.'    "título": "Baze datalake  - Objectos GeoJSON disponíveis",'.FLINHA;
-  echo '    "o": ['.FLINHA;
-  echo '        ["Nome", "Descrição", "Fonte", "Data"],'.FLINHA;  
+  echo '{'.PHP_EOL.'    "título": "Baze datalake  - Objectos GeoJSON disponíveis",'.PHP_EOL;
+  echo '    "o": ['.PHP_EOL;
+  echo '        ["Nome", "Descrição", "Fonte", "Data"],'.PHP_EOL;  
   $sql="select * from GJSON  where status not like 'indisp%' order by nome" ;
 
   $result= mysqli_query($conn,$sql);
   $nr=mysqli_num_rows($result);
 //
-  //echo FLINHA.$nr.FLINHA;
+  //echo PHP_EOL.$nr.PHP_EOL;
   //echo $A;
   $i=1;
   while($row = mysqli_fetch_assoc($result)) 
   {   // output data of each row
-      //echo '<br>'.FLINHA.'"dados":[<br>';
+      //echo '<br>'.PHP_EOL.'"dados":[<br>';
       $nome=utf8_encode($row['nome']);
       $desc=utf8_encode( $row['Desc']);
       $fonte=utf8_encode( $row['fonte']);
@@ -126,17 +129,17 @@ else {
       else
       {}
       $i++;
-//      echo $i.FLINHA;
+//      echo $i.PHP_EOL;
 
-      echo FLINHA;
+      echo PHP_EOL;
   }   
 
 
-echo "    ],".FLINHA;
-echo '    "api url": "http://baze.cm-maia.pt/BaZe/api/api4gj.php",'.FLINHA;
-echo '    "exemplo": "http://baze.cm-maia.pt/BaZe/api/api4gj.php?nome=Aeroporto",'.FLINHA;
-echo '    "JSON validado em": ["https://www.itb.ec.europa.eu/json/any/upload","https://jsonlint.com/", "https://jsonformatter.curiousconcept.com/"],'.FLINHA;
-echo '    "GeoJSON validado em": ["https://www.itb.ec.europa.eu/json/geojson/upload", "https://geojsonlint.com/", "https://geojson.io/"]'.FLINHA;
+echo "    ],".PHP_EOL;
+echo '    "api url": "http://baze.cm-maia.pt/BaZe/api/api4gj.php",'.PHP_EOL;
+echo '    "exemplo": "http://baze.cm-maia.pt/BaZe/api/api4gj.php?nome=Aeroporto",'.PHP_EOL;
+echo '    "JSON validado em": ["https://www.itb.ec.europa.eu/json/any/upload","https://jsonlint.com/", "https://jsonformatter.curiousconcept.com/"],'.PHP_EOL;
+echo '    "GeoJSON validado em": ["https://www.itb.ec.europa.eu/json/geojson/upload", "https://geojsonlint.com/", "https://geojson.io/"]'.PHP_EOL;
 echo "}";
 }
 }
