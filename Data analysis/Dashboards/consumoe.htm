@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+<LINK REL="SHORTCUT ICON" HREF="./pics/energy-icon-vector-23490849.png" type="image/x-icon">
+
+<title>Consumo de Energia eléctrica</title>
+
+<head>
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous">
+</script> 
+
+<style>
+.highcharts-figure,
+.highcharts-data-table table {
+    /* min-width: 360px;
+    max-width: 800px; */
+    width:100%;
+    height: 90%;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+
+
+</style>
+
+</head>
+<body onload="lecpes()" style='font-family: montserrat'>
+
+<table border=1 cellspacing="0" width='100%'>
+	<tr>
+		<td width=110 align=center>
+                <table><tr><td>15min<td><input type=radio name=peri value=def id=default onchange=leconsu()>
+                    <tr><td>hora<td><input type=radio name=peri value=hora id=hora  onchange=leconsu()>
+                    <tr><td>dia<td><input type=radio name=peri value=dia id=dia  checked  onchange=leconsu()>
+                    <tr><td>mês<td><input type=radio name=peri value=mes id=mes  onchange=leconsu()>
+                </table>
+                <hr>
+                <texarea style="font-size: 11px;" id=perf></texare>
+        <td width=110>
+        <!--
+		<select id='listaCPE' style='border:0px;' onchange='leconsu(this[this.selectedIndex].value)'> -->
+
+        <select id='listaCPE' style='border:0px;' onchange='leconsu()'>
+		<td><center>  
+                    <div id=chart1 width='100%'  style='width:100%;border:1px dotted lime;min-height: 20%;min-width:500px;height: 275px;' valign=middle><br><br><br><br>
+                <img src='./pics/Spinner-1s-131px.gif'>
+            <br>[Loading...]<br></div>
+            </center><div id=legenda></div>
+
+</table>
+PCP, 2022
+<script>
+
+function plotchartdu(chart)
+{
+    Highcharts.setOptions({chart: {style: {fontFamily: 'Montserrat'}}});
+    
+wa= Highcharts.chart(chart, {
+
+    colors: colors,
+    title: { text: ytitle },
+    yAxis: { title: { text: ytitle} },
+
+    xAxis: { type:'datetime' },
+    legend: { layout: 'vertical',  align: 'right',   verticalAlign: 'middle' },
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            } //,  pointStart: 2010
+        }
+    },
+    series: series ,
+    responsive: {
+        rules: [{condition: { maxWidth: 500 },
+            chartOptions: {legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+                } 
+
+});
+
+if (labelText!=false)
+{
+  wa.renderer.text(labelText, 80, 80)
+      .attr({
+        zIndex: 5
+      })
+      .css({
+        fontSize: '12px'
+      })
+      .add();
+}
+}
+
+colors = ['#C0C0C0', '#808080','#101010', 'black', '#050505', '#E80C7A'];
+
+kb=0;
+s=[]    
+
+function leconsu()
+{   start=performance.now()	
+    s=[]
+    tbcpe=document.getElementById("listaCPE")    
+    cpe=tbcpe[tbcpe.selectedIndex].value
+
+    tbag=document.getElementsByName("peri")
+    for (i in tbag)
+    {      // console.log("TB i "+i)
+           // console.log("TB"+tbag[i].value)
+            if (tbag[i].checked)
+                ag=tbag[i].value;
+             
+    }
+    console.log("ag:"+ag)
+    period=ag
+
+    url = "http://baze.cm-maia.pt/BaZe/api/cpeconsu.php?ag="+ag+"&cpe="+cpe
+    console.log(url)
+
+	$.getJSON(url, function(r){
+        kb=r;
+        console.log(r.cpe)
+        for (i in r.t)
+        {   td=r.t[i]
+            // console.log("TD"+td)    
+            while (td.length < 14) 
+                {td+="0";
+                }
+
+            dia =        td.substr(6,2)
+            if (dia=="00") dia = "01"
+         //   td2=td.substr(0,4)+"-"+td.substr(4,2)+"-"+td.substr(6,2)+" "+td.substr(8,2)+":"+td.substr(10,2)+":"+td.substr(12,2)
+             td2=td.substr(0,4)+"-"+td.substr(4,2)+"-"+dia+" "+td.substr(8,2)+":"+td.substr(10,2)+":"+td.substr(12,2)
+            //console.log("td2:",td2)
+            datats = (new Date(td2)).getTime()
+            s[i]=[datats, r.v[i]]
+
+        
+        }
+     ///   labelText = ((r.s3[0]-r.s3[r.s3.length-1])/(datads[0]-datads[datads.length-1])*1000*60*60*24).toFixed(2)+" Mb/day"
+        labelText = "[Legenda]"
+
+        ytitle="Consumo "+cpe+" ("+ag+")"
+        series=[{name:'Consumo', data:s, marker:{enabled:true}}]
+        plotchartdu("chart1")
+        ytitle="Idle ("+period+")"
+
+        document.getElementById("legenda").innerHTML = JSON.stringify(r.metadata);    
+
+	})
+
+    duration = performance.now() - start;
+    document.getElementById("perf").innerHTML=duration.toFixed(1)+" msecs."
+}
+
+function lecpes()
+{	console.log("lecpes")
+    sh=document.getElementById("listaCPE")
+    sh.selectedIndex=2
+
+	$.getJSON("http://baze.cm-maia.pt/BaZe/api/cpelist.php", function(r){
+    kb=r;
+    console.log(r)
+
+    for (i in r)
+    {
+    	console.log(r[i]);
+    	ni=document.createElement("option")
+    	ni.value=r[i]
+    	ni.text=r[i]
+
+    	sh.appendChild(ni)
+
+    }
+    sh.size=Math.min(5,i)
+
+	});
+
+//    sh.selectedIndex=0
+
+ //   leconsu()    
+   setTimeout(leconsu, 1000)  
+ }
+</script>
+
+</body>
+</html>

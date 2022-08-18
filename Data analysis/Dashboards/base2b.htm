@@ -1,0 +1,593 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+<LINK REL="SHORTCUT ICON" HREF="./pics/minilogobaze.png" type="image/x-icon">
+
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Base2b</title>
+    <style>
+      html, body {
+        height: 370px;
+        padding: 0;
+        margin: 0;
+        }
+     
+      #map0 {
+       height: 100%;
+       width: 300px;
+       overflow: hidden;
+       float: left;
+       border: thin solid #333;
+       }
+     
+    </style>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="  crossorigin="anonymous"></script>
+
+<!-- Open Street maps  -->
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+<script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
+
+<!--
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+-->
+<script>
+  $.ajaxSetup({
+    async: false
+})
+
+</script>
+
+ </head>
+  <body onload="initMap2();" style='font-family: montserrat;'>
+      
+      <table width='100%' border=1 cellspacing="0" cellpadding="0" style="border:3px solid lime;border-radius:5px;font-family: montserrat;">
+    <tr  style='font-weight: bold;color:whitesmoke;background-color: grey;opacity:.7;'> 
+      <td style='width: 43%' align=center><input type="text" id="agora2" style='width:250px;text-align: center;' title='hora' readonly>
+      <td style='width: 12%' align=center cellpadding=5 cellspacing=3><font size=4>BaZe
+      <td style='width: 43%' id=metalarm></table>
+
+
+      <table border=0 width='100%'><tr><td width="300" valign=top align=Center>
+          <input type=text id=Nome value='N14'><input type=button value=go onclick="loadem(document.getElementById('Nome').value)">
+
+          <table id='geos' border=1 style='max-height:300px;overflow-y: scroll;font-size:11px;display:block;'>
+          </table>
+    <span id=dimes></span>
+      <td id=colmap width="*">
+      <div id="map0" width='80%' style='width:50%;'></div>
+    </table>
+    <script>
+        document.getElementById("geos").style.height=window.innerHeight-120+"px";
+        document.getElementById("geos").style.maxHeight=window.innerHeight-120+"px";
+    </script>
+
+<script>
+
+function xcords(x)
+{       y=[]
+        for (i in x)
+        {   
+            k=x.length-i-1    
+            //k=i    
+            console.log(i+":"+x[k][0]+","+x[k][1])
+            y.push([x[k][0], x[k][1]])
+
+        }
+        k=x.length-1    
+
+        y.push([x[k][0], x[k][1]])
+
+        console.log(JSON.stringify  (y))
+        return(y)
+}
+
+
+myLatLng = { lat: 41.2327, lng: -8.62230 };
+
+
+p=[]
+p.push( [ -8.622677, 41.232694 ]) /* canto inferior esquerdo */
+p.push( [ -8.621972, 41.232746 ]) /* canto inferior direito  */
+p.push( [ -8.621975, 41.232766 ]) /* canto superior direito  */ 
+p.push( [ -8.622655, 41.2327158 ]) /* canto superior esquerdo */
+
+
+a1=(p[0][1]-p[1][1]) / (p[0][0]-p[1][0])
+console.log("a1:"+a1+" -> a2:"+( -1./a1))
+console.log("b1:"+ (p[0][1]-a1*p[0][0]))
+console.log("b1:"+ (p[1][1]-a1*p[1][0]))
+
+// https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Cartesian_coordinates
+
+d2tobase=Math.abs((p[1][0]-p[0][0])*(p[1][1]-p[2][1]) - (p[1][0]-p[2][0])*(p[1][1]-p[0][1]) )/Math.sqrt( Math.pow((p[1][0]-p[0][0]),2) + Math.pow((p[1][1]-p[0][1]),2) )
+
+d3tobase=Math.abs((p[1][0]-p[0][0])*(p[1][1]-p[3][1]) - (p[1][0]-p[3][0])*(p[1][1]-p[0][1]) )/Math.sqrt( Math.pow((p[1][0]-p[0][0]),2) + Math.pow((p[1][1]-p[0][1]),2) )
+
+console.log("d2tb, d3tb"+d2tobase+", "+d3tobase)
+
+ 
+
+
+var ln;
+
+function initMap2() 
+{
+ url="http://baze.cm-maia.pt/BaZe/api/api4gj.php";
+ console.log("url:"+url)
+  
+  fetch(url)
+  .then(response => response.json())
+  .then(data => { 
+    ln=data;
+    console.log(data);
+    j=0
+      //return(r2)
+      th=document.getElementById('geos');
+      for (r in ln.o)
+      { j++;
+   //     console.log(r)
+        a=document.createElement("td");
+        b=document.createElement("td")
+        c=document.createElement("tr")
+        nome=ln.o[r][0]
+        if (nome=="Nome")
+        {
+          a.innerHTML=nome;
+        }
+        else
+        {
+          d=document.createElement("button")
+        d.value=nome
+        d.id="B"+nome;
+        d.appendChild(document.createTextNode(nome))
+        //d.setAttribute("value", nome)
+        //d.setAttribute("innerHTML", nome)
+        //d.onclick=loadem(d.value)  
+       // a.innerHTML=ln.o[r][0]
+       //     btn.setAttribute("onclick", alert("clicked"));
+
+         d.setAttribute("onclick", "loadem(this.value)");
+
+        a.appendChild(d)
+          
+        }
+
+        b.innerHTML=ln.o[r][1]
+        c.appendChild(a)  
+        c.appendChild(b)
+        th.appendChild(c)  
+      }
+  }); 
+
+
+document.getElementById("map0").style.height=(window.innerHeight-40)+"px";
+//document.getElementById("map0").style.height=(window.innerHeight)+"px";
+colm200=window.innerWidth-300
+document.getElementById("colmap").style.width=(colm200)+"px";
+document.getElementById("map0").style.width=(colm200-10)+"px";
+
+document.getElementById("dimes").innerHTML=window.innerWidth +" x " + window.innerHeight
+
+
+urlamb='https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicGVkcm9jY3BpbWVudGEiLCJhIjoiY2tqYjl4Z241Mzl4ZDJ6bGdjNjJ3ODRveSJ9.hu3b-A7Hx7SuJR73jPNAbw'
+
+map0 = L.map('map0').setView([41.2338, -8.6234], 15); //Zoom 20 - focado na cobertura verde
+L.tileLayer(urlamb, {  maxZoom: 21, id: 'mapbox/light-v9', tileSize: 512, zoomOffset: -1}).addTo(map0);
+
+
+L.control.scale().addTo(map0);
+
+
+ queryString = window.location.search;
+es = new URLSearchParams(window.location.search)
+e0 = es.get('e0')
+console.log("================e0:"+e0)
+if (e0 != null)
+  { loadem(e0)
+
+      if (e0.toLowerCase()=="pro-baze-omega-x") { loadem("LimConcVM"); }
+      if (e0.toLowerCase()=="tpwapi")  {loadem("LimConcVM"); }
+      if (e0.toLowerCase()=="tpwbit")  {loadem("LimConcVM"); }
+    
+  }
+
+  map0.invalidateSize();
+
+}
+
+function markdata(o)
+{   console.log("o:"+o.type+", features"+o.features)
+    
+    if (typeof(o.type)=="undefined")
+    {
+        console.log("===============> Sem type ?")
+    }
+    else
+    {
+      switch (o.type)
+      {      case "FeatureCollection":
+                      for (sf in o.features)
+                      {   console.log ("vou recorrer ", sf,o.features[sf]) 
+                            markdata(o.features[sf])
+                      }
+                      break
+              case "Feature":
+              {   console.log(o.geometry.type)
+                  switch (o.geometry.type)
+                  {
+                      case "Point":
+                        //  console.log("featyure:PONTO!"+o.properties.popupContent  )
+
+                          if (typeof(o.h)=="undefined")
+                          {   if (typeof(o.properties.icon)=="undefined")
+                              {  iconurl="./pics/micon.png" }
+                              else
+                              { iconurl=o.properties.icon;  }
+                              console.log("+"+iconurl)
+
+                              icdim=7
+                              icdim=32  
+
+                              dIcon=L.icon({ iconUrl: iconurl, iconSize: [icdim, icdim], iconAnchor: [icdim/2, icdim], popupAnchor: [0, -5./6.*icdim] })
+                                console.log("ICON FROM properties:",iconurl)
+                
+                              o.h=L.geoJSON(o, {   pointToLayer: function (feature, latlng) { 
+                                  return L.marker(latlng, {icon: dIcon}); },
+                                        onEachFeature: onEachFeature}).addTo(map0)
+                          }
+                          else
+                          { if (o.h._map==null)
+                              {o.h.addTo(map0)
+
+                              //  O.properties.popupContent="22222222222222222"
+                              }
+                              else
+                              { o.h.remove()  }
+                          }
+
+                          break;
+                      default:
+                          console.log("feture:"+o.geometry.type+":"+o.properties.popupContent)
+                          
+                          if (typeof(o.h)=="undefined")
+                          { // Modo 1
+                          //  o.h=L.geoJSON(o).addTo(map0)
+                            // Modo 2
+                            o.h=L.geoJSON(o, {   pointToLayer: function (feature, latlng) { 
+                                  return L.marker(latlng, {icon: dIcon}); },
+                                        onEachFeature: onEachFeature}).addTo(map0)
+
+
+                            //properties.popupContent="3333333333333333"
+                          }
+                          else
+                          { if (o.h._map==null)
+                              {o.h.addTo(map0)}
+                              else
+                              {      
+                                o.h.remove()
+                              }
+                          } 
+                          break;
+                  }
+
+
+                      if (typeof(o.properties.style)!=="undefined")
+                      {   
+                        console.log("++++++++++ Style"+o.properties.style)
+                        o.h.setStyle(o.properties.style)      
+                      }
+                      else
+                      {
+                        console.log("- - - NO Style" ) // +o.properties.style)
+                      }
+
+              }
+      }
+    }
+    return;
+}
+
+var response;
+var r2;
+var r1;
+var data;
+var H={}
+    var myq;
+
+CYIcon=[]
+dummyIcon=null;
+
+function loadem(x)
+{  // nome=document.getElementById("Nome").value
+    nome=x
+    console.log ("Loadem", x)
+    
+    if (typeof(H[x])=="undefined")
+    {
+
+    url="http://baze.cm-maia.pt/BaZe/api/api4gj.php?nome="+nome;
+    console.log("url:"+url)
+  
+  fetch(url)
+  .then(response => response.json())
+  .then(data => { 
+    r2=data;
+    console.log(data)
+    H[nome]={}
+    H[nome].o=data;
+
+      markdata(H[nome].o)
+       return; 
+
+    if ((nome=="camtrafA" || nome=="camtrafB") )
+    {
+      for (i in H[nome].o.features)
+      { //console.log("tipo:"+i+":"+H[nome].o.features[i].properties.icon)
+        if (H[nome].o.features[i].properties.icon=="tipo1")
+        { 
+           CYIcon.push(L.icon({ iconUrl: './Yunex/images/icon-1 - r'+H[nome].o.features[i].properties.rot.padStart(3,'0')+'.png', iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -28] }))
+        }
+      else
+        {  CYIcon.push(L.icon({ iconUrl: './Yunex/images/icon-2.png', iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -28] }))
+       }
+     
+
+     // myq= {}
+     // myq.geometry=H[nome].o.features[i].geometry; 
+      
+      H[nome].o.features[i].h= L.geoJSON([
+       {"geometry":{ "type": "Point", "coordinates":[H[nome].o.features[i].geometry.coordinates[0], H[nome].o.features[i].geometry.coordinates[1] ] }  , 
+      "type":"Feature", "properties":{"popupContent":H[nome].o.features[i].properties.mat+"("+H[nome].o.features[i].geometry.coordinates[0]+")<br><table title='' border=1><tr><td>kjkj<td>jhjhj</table><div id='mko"+i+"' title='mko"+i+"' onfocus='sera()' onclick='sera()' onhover='sera()'  onmouseover='sera(this)' >kfdjfkdjfkdjf</div>"}} ],
+
+        {   pointToLayer: function (feature, latlng) 
+          { return L.marker(latlng, {icon: CYIcon[i]}); },
+                onEachFeature: onEachFeature}
+          ).addTo(map0);
+      }
+        H[nome].h={}
+        H[nome].h._map="dummy"
+    }
+    else
+    {       
+
+        if ((typeof(H[nome].o.features)=="undefined")||(H[nome].o.features.length==1 || typeof(H[nome].o.features)=="undefined")) 
+        {  H[nome].h= L.geoJSON(H[nome].o).addTo(map0);      
+        }
+        else
+        { for (k in H[nome].o.features)
+          { if (H[nome].o.features[k].geometry.type=="Point")
+            {   iconurl=  './pics/'+H[nome].o.features[k].properties.icon
+                  console.log("iconURL:"+iconurl) 
+                  dummyIcon=L.icon({ iconUrl: iconurl, iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -28] })
+                  console.log("ICON FROM properties")
+              
+
+              H[nome].o.features[k].h= L.geoJSON([{"geometry":{ "type": "Point", "coordinates":[H[nome].o.features[k].geometry.coordinates[0], H[nome].o.features[k].geometry.coordinates[1] ] }, "type":"Feature", "properties":{"popupContent":H[nome].o.features[k].properties.popupContent+"("+H[nome].o.features[k].geometry.coordinates[0]+")<br><div id='mko"+k+"'></div>"}} ],
+            {   pointToLayer: function (feature, latlng) 
+             { return L.marker(latlng, {icon: dummyIcon}); },
+                onEachFeature: onEachFeature}
+              ).addTo(map0);
+      
+            }
+            else
+            { console.log("F22:", H[nome].o.features[k].properties.popupContent)
+              H[nome].o.features[k].h= L.geoJSON(H[nome].o.features[k]).addTo(map0);
+
+            }
+
+
+            H[nome].h={}
+            H[nome].h._map="dummy"
+            }
+          }
+      }
+  }
+  );
+}
+  else
+  {     markdata(H[x].o)
+      return
+
+    console.log( "2o if:"+nome)
+      if (H[nome].h._map==null)
+      { console.log("Vou re adicionar "+nome)
+       
+
+      if ((typeof(H[nome].o.features)=="undefined")||(H[nome].o.features.length==1 || typeof(H[nome].o.features)=="undefined")) 
+      {}
+      else
+      {
+      for (k in H[nome].o.features)
+      { if (H[nome].o.features[k].geometry.type=="Point")
+          {    iconurl=  './pics/'+H[nome].o.features[k].properties.icon
+
+              console.log("iconURL:"+iconurl) 
+
+            dummyIcon=L.icon({ iconUrl: './pics/'+H[nome].o.features[k].properties.icon, iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -28] })
+              console.log("ICON FROM properties")
+          }
+
+
+      H[nome].o.features[k].h= L.geoJSON([
+       {"geometry":{ "type": "Point", "coordinates":[H[nome].o.features[k].geometry.coordinates[0], H[nome].o.features[k].geometry.coordinates[1] ] }  , 
+      "type":"Feature", "properties":{"popupContent":H[nome].o.features[k].properties.popupContent+"("+H[nome].o.features[k].geometry.coordinates[0]+")<br><div id='mko"+k+"'></div>"}} ],
+
+        {   pointToLayer: function (feature, latlng) 
+          { return L.marker(latlng, {icon: dummyIcon}); },
+                onEachFeature: onEachFeature}
+          ).addTo(map0);
+      
+        H[nome].h={}
+        H[nome].h._map="dummy"
+
+      }
+      }
+
+
+        if (nome=="camtrafA" || nome=="camtrafB")
+        {
+
+  for (i in H[nome].o.features)
+      { console.log("tipo:"+i+":"+H[nome].o.features[i].properties.icon)
+        if (H[nome].o.features[i].properties.icon=="tipo1")
+        { 
+           CYIcon.push(L.icon({ iconUrl: './Yunex/images/icon-1 - r'+H[nome].o.features[i].properties.rot.padStart(3,'0')+'.png', iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -28] }))
+        }
+      else
+        {  CYIcon.push(L.icon({ iconUrl: './Yunex/images/icon-2.png', iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -28] }))
+       }
+     
+
+     // myq= {}
+     // myq.geometry=H[nome].o.features[i].geometry; 
+      
+      H[nome].o.features[i].h= L.geoJSON([
+       {"geometry":{ "type": "Point", "coordinates":[H[nome].o.features[i].geometry.coordinates[0], H[nome].o.features[i].geometry.coordinates[1] ] }  , 
+      "type":"Feature", "properties":{"popupContent":H[nome].o.features[i].properties.mat+"("+H[nome].o.features[i].geometry.coordinates[0]+")<br><div id='mko"+i+"'></div>"}} ],
+
+        {   pointToLayer: function (feature, latlng) 
+          { return L.marker(latlng, {icon: CYIcon[i]}); },
+                onEachFeature: onEachFeature}
+          ).addTo(map0);
+      }
+    H[nome].h={}
+    H[nome].h._map="dummy"
+    
+
+
+        }
+      else
+        {
+         H[nome].h=L.geoJSON(H[nome].o).addTo(map0)
+       }
+     //   H[nome].h.addTo("map0")
+      }
+      else
+      { console.log("vou remover!!")
+
+      if (nome=="camtrafA" || nome=="camtrafB")
+      {
+          for (i in H[nome].o.features)
+          {
+              H[nome].o.features[i].h.remove()
+          }
+        H[nome].h._map=null
+
+      }
+      else
+      {
+        H[nome].h.remove();
+      }
+      }
+  }
+}
+
+
+function onEachFeature(feature, layer) {
+ 
+   popupContent=""
+
+    if (feature.properties && feature.properties.popupContent) {
+      popupContent += feature.properties.popupContent;
+    }
+    layer.bindPopup(popupContent);
+    layer.bindPopup(popupContent, {  maxWidth: "auto"});
+
+  }
+
+koords=0;
+polygon = 8;
+var areaTotal=0
+
+
+function trew()
+{
+
+//var poly = // Your polygon layer here; may or may not be contiguous
+
+
+
+for (sarea in areafp.features)
+{	//console.log(sarea)
+	koords = []
+	for (k in areafp.features[sarea].geometry.coordinates[0])
+	{	
+		tob = []
+		tob=[areafp.features[sarea].geometry.coordinates[0][k][1],areafp.features[sarea].geometry.coordinates[0][k][0]]
+		koords.push(tob )
+
+
+	
+	}
+	//console.log("K:"+koords+"+"+tob)
+//	var polygon = turf.polygon([[[125, -15], [113, -22], [154, -27], [144, -15], [125, -15]]]);
+	//polyt=turf.polygon([koords])
+	polyt2=turf.polygon([areafp.features[sarea].geometry.coordinates[0]])
+
+	 area = turf.area(polyt2);
+	//	console.log("area:"+area)
+	areaTotal += area
+
+		var polygon = L.polygon(koords, {color: 'red', popupContent:area}).bindPopup("Área:"+area.toFixed(0)+" m2").addTo(map0);
+//		console.log("QA:"+polygon.getLatLngs())
+//console.log('area is to be: '+L.GeometryUtil.geodesicArea(polygon.getLatLngs()));
+
+	//polygon.setPopupContent("Área:"+area);
+
+
+}
+
+//return()
+
+// Your polygon layer here; may or may not be contiguous
+//var poly = 
+
+var area = 0;
+for (island of poly.getLatLngs()) {
+    // If the polygon is non-contiguous, access the island
+    if (island.length < 2) {
+        island = island[0]
+    }
+    // Sum the area within each "island"
+    area += L.GeometryUtil.geodesicArea(island);
+}
+
+}
+
+
+
+function sera(x)
+{
+  console.log ("SERA:"+x.id)
+}
+
+
+var agorah;
+function set0()
+{ //  console.log("set0"+Date()) 
+ //    W=new Date().toString().substring(0,24)
+ //   document.getElementById('agora2').value= W;
+   document.getElementById('agora2').value= Date().toString().substring(0,24);
+   agorah=setTimeout(function(){ set0(); },5000)
+ //   console.log("agorah:"+agorah)
+}
+set0()
+
+</script>
+
+<hr>
+<a href="https://www.flaticon.com/free-icons/train-station" title="train-station icons">Train-station icons created by mavadee - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/subway" title="subway icons">Subway/metro icons created by Freepik - Flaticon</a>
+</body>
+</html>
