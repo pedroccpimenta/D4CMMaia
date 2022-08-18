@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Icon CMMaia</title>
+</head>
+<body>
+	<table>
+		<TR><td width="120">
+			Raio do octogono:<input type="text" id="r8" value=90 onchange="nove()" size=3>
+			ratio  base&rarr;l1:<input type="text" id="rbl1" value=1.2 onchange="nove()	" size=3>
+			ratio  base&rarr;l2:<input type="text" id="rbl2" value=1.3 onchange="nove()	" size=3>
+
+			<td id=konsola width="100" style='overflow: scroll;overflow-y: scroll;height: 700px;max-height: 700px;'><td>
+<canvas id=plano width=1000 height=600 style="width: 1000px;height: 600px;background-color: white;"></canvas>
+</td></table>
+
+<script type="text/javascript">
+	var	kp=0;
+	kor="silver"	
+	var trap=[];
+	var passo=-2;
+	d=document.getElementById('plano')
+	var ctx=d.getContext("2d");
+
+	dw=36
+	alfa0=(180-dw)*Math.PI/180
+	alfaf=(-dw)*Math.PI/180
+
+	alfaf =-0.7175273
+	alfaf =-0.717540
+
+
+	ctx.clearRect(0,0,plano.width,plano.height);  
+	r=document.getElementById('r8').value*1
+	xc=d.width/2;
+	yc=d.height/2;
+
+	passo0=Math.PI/5386
+	passo=passo0
+	ctx.strokeStyle=kor
+	lado=(5/3+1)*r
+	ybasepe=yc-lado
+	xbasepe=xc
+	
+	ctx.beginPath()
+//	ctx.arc(xbasepe, ybasepe,10, ybasepe,Math.PI)
+	ctx.stroke()
+
+	d1=10
+	d2=0
+
+	console.log('alfaf 0:', alfaf)
+	ki=0
+	while(Math.abs(d1-d2)>.001 && ki<4)
+	{ passo=passo0
+		ki++
+
+// Primeiro arco
+	alfa=alfa0
+	p1x=xc+r*Math.cos(alfa)
+	p1y=yc+r*Math.sin(alfa)
+
+	ctx.beginPath()
+	for(alfa=alfa0;alfa>alfaf;alfa-=passo)
+	{	
+		if (alfa<-.7) passo=1e-5
+		ctx.moveTo(xc+r*Math.cos(alfa),yc+r*Math.sin(alfa))
+		x=xc+r*Math.cos(alfa+passo)
+		y=yc+r*Math.sin(alfa+passo)
+		ctx.lineTo(x,y)
+	
+		p2x=x
+		p2y=y
+	}		
+	ctx.stroke()
+
+	xcd=xc+lado
+	ycd=ybasepe
+
+	declive=Math.tan(alfaf)
+	xcd=xc-(yc-ybasepe)/declive
+	//console.log("xcd 0", xcd)
+
+	//d1=Math.sqrt(Math.pow(xbasepe-xcd,2)+Math.pow(ybasepe-ycd,2))
+	//d2=Math.sqrt(Math.pow(p2x-xcd,2)+Math.pow(p2y-ycd,2))
+
+		
+		d1=Math.sqrt(Math.pow(xbasepe-xcd,2)+Math.pow(ybasepe-ycd,2))	
+		d2=Math.sqrt(Math.pow(xc-xcd,2)+Math.pow(yc-ycd,2))-r
+		//console.log("d1, d2:", d1, d2, "OOOOO:",d1-d2)
+		console.log("D:",d1-d2)	
+		alfaf-=(d1-d2)*.001
+		console.log('alfaf:',alfaf)
+	}
+	r2=d1
+	passo=passo0
+	console.log(d1, d2)
+	alfabeta=Math.asin((p2y-ybasepe)/d1)/Math.PI*180
+	console.log("alfabeta:", alfabeta)
+
+
+// Segundo arco
+	ctx.beginPath()
+	ctx.strokeStyle=kor
+	//r2=lado
+	for(alfa=(180-alfabeta)/180*Math.PI;alfa<Math.PI;alfa+=passo)
+	{	ctx.moveTo(xcd+r2*Math.cos(alfa),ycd+r2*Math.sin(alfa))
+		x=xcd+r2*Math.cos(alfa+passo)
+		y=ycd+r2*Math.sin(alfa+passo)
+		ctx.lineTo(x,y)
+
+	}	
+	ctx.stroke()
+
+
+// Terceiro arco
+	xcd=xbasepe-d1
+
+	ctx.beginPath()
+
+	//r2=lado
+	//for(alfa=0;alfa<=alfabeta/180*Math.PI;alfa+=passo)
+	for(alfa=0;alfa<=alfabeta/180*Math.PI;alfa+=passo)
+	{	ctx.moveTo(xcd+r2*Math.cos(alfa),ycd+r2*Math.sin(alfa))
+		x=xcd+r2*Math.cos(alfa+passo)
+		y=ycd+r2*Math.sin(alfa+passo)
+		ctx.lineTo(x,y)
+
+	}	
+	ctx.stroke()
+
+
+// Círculo interno
+	r3=r*6/8
+	ctx.beginPath()
+	//r2=lado
+	alfa=alfa0
+//	p3x=xc+r3*Math.cos(alfa+passo)
+//	p3y=yc+r3*Math.sin(alfa+passo)
+	ctx.moveTo(p1x,p1y)
+	//ctx.moveTo(p2x,p2y)
+		
+
+	for(alfa=alfa0;alfa>-(90-36)/180*Math.PI;alfa-=passo)
+	{	ctx.lineTo(xc+r3*Math.cos(alfa),yc+r3*Math.sin(alfa))
+		x=xc+r3*Math.cos(alfa+passo)
+		y=yc+r3*Math.sin(alfa+passo)
+		ctx.lineTo(x,y)
+	}	
+	alfa=((-90-36)/180*Math.PI)
+	ctx.moveTo(xc+r3*Math.cos(alfa),yc+r3*Math.sin(alfa))
+	ctx.lineTo(x,y)
+		
+	for(alfa=((-90-36)/180*Math.PI);alfa>-alfa0;alfa-=passo)
+	{	ctx.moveTo(xc+r3*Math.cos(alfa),yc+r3*Math.sin(alfa))
+		x=xc+r3*Math.cos(alfa+passo)
+		y=yc+r3*Math.sin(alfa+passo)
+		ctx.lineTo(x,y)
+		
+		p5x=x
+		p5y=y
+	}
+	ctx.stroke()
+
+
+
+
+
+// QUarto arco 
+passo=passo0
+	ctx.beginPath()
+	//r2=lado
+	console.log(-180+alfabeta)
+	console.log(180-36)
+	for(alfa=-(180-alfabeta)/180*Math.PI;alfa>-(180-36)/180*Math.PI;alfa-=passo)
+	{	ctx.moveTo(xc+r*Math.cos(alfa),yc+r*Math.sin(alfa))
+		x=xc+r*Math.cos(alfa+passo)
+		y=yc+r*Math.sin(alfa+passo)
+		ctx.lineTo(x,y)
+		console.log("xiça")
+	}	
+	ctx.lineTo(p5x,p5y)
+
+	ctx.stroke()
+
+
+
+function nove(r)
+{	//alert('nove')
+
+
+}
+
+function	konsola(t)	
+{	document.getElementById('konsola').innerHTML+=t+"<br>"
+}
+
+
+</script>
+
+</body>
+</html>
