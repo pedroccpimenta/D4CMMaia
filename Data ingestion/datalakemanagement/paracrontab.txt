@@ -1,0 +1,1 @@
+sudo du -chs /var/lib/mysql/* >  ~ppimenta/baze/opendatasoft/datalakemanagement/dlsize.txt

@@ -1,0 +1,16 @@
+16K	/var/lib/mysql/aria_log.00000001
+4.0K	/var/lib/mysql/aria_log_control
+356M	/var/lib/mysql/BAZE
+4.0K	/var/lib/mysql/databaseteste
+8.0K	/var/lib/mysql/ib_buffer_pool
+76M	/var/lib/mysql/ibdata1
+48M	/var/lib/mysql/ib_logfile0
+48M	/var/lib/mysql/ib_logfile1
+12M	/var/lib/mysql/ibtmp1
+0	/var/lib/mysql/multi-master.info
+1.3M	/var/lib/mysql/mysql
+0	/var/lib/mysql/mysql.sock
+4.0K	/var/lib/mysql/mysql_upgrade_info
+4.0K	/var/lib/mysql/performance_schema
+24K	/var/lib/mysql/tc.log
+542M	total
