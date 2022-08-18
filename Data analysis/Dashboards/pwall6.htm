@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="it">
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
+ <LINK REL="SHORTCUT ICON" HREF="http://baze.cm-maia.pt/BaZe/videowall/pics/micon.png" type="image/x-icon">
+
+<!---
+Conversão de vídeo para gif animado:
+https://ezgif.com/video-to-gif
+
+-->
+
+<head>
+<head>
+
+
+<style>
+#osmap2 {
+      width: 100%;
+      height: 80px;
+      display: inline-block;
+    }
+</style>
+
+<!-- WEB -->
+<!--   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Open Street maps  -->
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+<script>
+
+lim={}
+lim["PM10"]=[20, 35, 50, 100];  lim[1]=lim["PM10"]
+lim["PM25"]=[10, 20, 25, 50];   lim[2]=lim["PM25"]
+lim["NO2"]=[40, 100, 200, 400]; lim[3]=lim["NO2"]
+lim["O3"]=[80, 100, 180, 240];  lim[4]=lim["O3"]
+lim["SO2"]=[100, 200, 350, 500]; lim[5]=lim["SO2"]
+lim["CO"]=[100, 140, 200, 400]; lim[6]=lim["CO"]
+lim["NO"]=[40, 100, 200, 400];  lim[7]=lim["NO"]
+
+kor=[]
+kor[1]="#7DC65E"
+kor[2]="#A1D243"
+kor[3]="#FFD800"
+kor[4]="#E5954A"
+kor[5]="#FF1000"
+
+elem=[]
+elem[1]="PM10"
+elem[2]="PM25"
+elem[3]="NO2"
+elem[4]="O3"
+elem[5]="SO2"
+elem[6]="CO"
+elem[7]="NO"
+
+
+var a2b;
+var l2b;
+function ratset()
+{	console.log("ratset() in")
+	//alt=screen.height; // 7)
+	//larg=screen.width;  // 4
+
+	alt=window.innerHeight-6
+	larg=window.innerWidth-6; 
+
+ larg  = window.innerWidth || document.documentElement.clientWidth || 
+document.body.clientWidth;
+ alt = window.innerHeight|| document.documentElement.clientHeight|| 
+document.body.clientHeight;
+
+	alt=$(window).height() -6
+	larg= $(window).width()-6
+
+	rat = larg/alt;
+	left = Math.floor((larg-l2b+4)/2+1)
+
+	if (rat>5/4) // Landscape
+	{	l2b=Math.floor(Math.min(.992*larg, larg-15))
+		a2b=Math.floor(Math.min(.98*alt,  alt-15))
+	    left = Math.floor((larg-l2b+4)/2+1)
+
+		document.getElementById("topo").style.width=l2b+"px"
+		topoh=Math.floor(a2b*.15)
+		document.getElementById("topo").style.height=topoh+"px"
+		document.getElementById("topo").style.left=left-2+"px"
+
+		document.getElementById("logo1").style.top="5%"
+		document.getElementById("logo1").style.width="10%"
+		document.getElementById("logo1").style.left="5%"
+		document.getElementById("logo2").style.top="5%"
+		document.getElementById("logo2").style.width="10%"
+		document.getElementById("logo2").style.left="75%"
+//		document.getElementById("logo2").style.right="5%"
+
+	//	document.getElementById("odiv").style.height=a2b+"px";
+	//	document.getElementById("otab").style.height=a2b+"px";
+		document.getElementById("compl").style.display="inline-block";
+		pwidth=Math.floor(.4*l2b)-3
+		document.getElementById("compl").style.width=pwidth+"px";
+		cheight=Math.floor(.8*a2b)
+		document.getElementById("compl").style.height=(cheight)+"px";
+		document.getElementById("compl").style.top=topoh+4+"px";
+		document.getElementById("compl").style.left=left+"px";
+		//document.getElementById("compl").style.display="none";
+
+
+
+		document.getElementById("principal").style.display="inline-block";
+		document.getElementById("principal").style.width=(l2b-pwidth)+"px";
+		document.getElementById("principal").style.height=(Math.floor(a2b*.8))+"px";
+		document.getElementById("principal").style.top=topoh+4+"px";
+		document.getElementById("principal").style.left=(pwidth+10)+"px";
+		//document.getElementById("principal").style.display="none";
+
+		document.getElementById("fundo").style.height=Math.floor(a2b*.07)+"px";
+		document.getElementById("fundo").style.width=l2b+"px";
+		document.getElementById("fundo").style.top=topoh+cheight+6+"px";
+		document.getElementById("fundo").style.left=left+"px";
+
+		modo="landscape"
+
+	}
+	else  // Portrait
+	{	//l2b=Math.min(.992*larg,Math.floor(larg)-15)
+		a2b=Math.floor(Math.min(.99*alt, alt))
+
+		//a2b=Math.floor(window.innerHeight-5)
+		l2b=Math.floor(alt*(4./7.))	
+		if (l2b>larg)
+		{	a2b=Math.floor(larg*(7./4.))
+		l2b=Math.floor(alt*(4./7.))	
+		}
+		//left = Math.floor((larg-l2b+2)/2)
+		left = Math.floor((larg-l2b+4)/2+1)
+
+	//document.getElementById("odiv").style.height=a2b+"px";
+	topoh=Math.floor(a2b*.15)
+		document.getElementById("topo").style.width=l2b+"px";
+		document.getElementById("topo").style.height=topoh+"px";
+		document.getElementById("topo").style.left=left-2+"px";
+
+//		document.getElementById("topo").style.left=Math.floor((larg-l2b+2)/2)+"px";
+
+		document.getElementById("logo1").style.top="10%"
+		document.getElementById("logo1").style.width="40%"
+		document.getElementById("logo1").style.left="2%"
+
+		document.getElementById("logo2").style.top="8%"
+		document.getElementById("logo2").style.width="20%"
+		document.getElementById("logo2").style.left="75%"
+
+		//document.getElementById("topo").style.display="block";
+		
+		document.getElementById("principal").style.width=l2b+"px";
+		altprinc=Math.floor(a2b*.45)
+		document.getElementById("principal").style.height=altprinc+"px";
+		//document.getElementById("principal").style.display="block";
+		document.getElementById("principal").style.top=topoh+4+"px";
+		document.getElementById("principal").style.left=left+"px";
+		
+		altcompl=Math.floor(a2b*.3)
+		document.getElementById("compl").style.width=l2b+"px";
+		document.getElementById("compl").style.height=altcompl+"px";
+		//document.getElementById("compl").style.display="block";
+		document.getElementById("compl").style.left=left+"px";
+		document.getElementById("compl").style.top=topoh+altprinc+6+"px";
+
+		altfundo=Math.floor(a2b*.10)
+		document.getElementById("fundo").style.width=l2b+"px";
+		//document.getElementById("fundo").style.width="*";
+		document.getElementById("fundo").style.height=altfundo+"px";
+		document.getElementById("fundo").style.top=topoh+altprinc+altcompl+8+"px";
+		document.getElementById("fundo").style.left=left+"px";
+		//document.getElementById("fundo").style.display="block";
+
+		console.log (":alt:"+a2b+":"+l2b)
+		document.getElementById("fundoct").innerHTML="<img src='http://baze.cm-maia.pt/BaZe/videowall/pics/BaZe2022.png' height='90%' >&nbsp;&nbsp;&nbsp;&nbsp;"
+
+		modo="portrait"
+	}
+
+	switch(modo)
+	{ 
+		case "portrait":
+altura =Math.floor(a2b*.08)+"px"
+		
+		document.getElementById("fundoct").innerHTML="<img src='http://baze.cm-maia.pt/BaZe/videowall/pics/BaZe2022.png' height='"+altura+"' >&nbsp;&nbsp;&nbsp;&nbsp;"
+			break;
+		default:
+altura =Math.floor(a2b*.06)+"px"
+		
+		document.getElementById("fundoct").innerHTML="<a href='http://baze.cm-maia.pt/BaZe'>+ info</a>&nbsp;<img src='http://baze.cm-maia.pt/BaZe/videowall/pics/BaZe2022.png' height='"+altura+"' >&nbsp;&nbsp;&nbsp;&nbsp;"
+		}
+
+	document.getElementById("topo").title="Topo ["+l2b+"x"+a2b+"], lef:"+left+".";
+	document.getElementById("principal").title="Principal ["+l2b+"x"+a2b+"], lef:"+left+".";
+	document.getElementById("compl").title="Complementar ["+l2b+"x"+a2b+"], lef:"+left+".";
+	document.getElementById("fundo").title="Fundo ["+l2b+"x"+a2b+"], lef:"+left+".";
+
+
+	altdimes=Math.floor(alt*.06)
+	document.getElementById("dimes").innerHTML=alt+" x "+larg
+	document.getElementById("dimes").innerHTML+=" -> "+Math.floor(rat*100)/100;
+	document.getElementById("dimes").style.width=altdimes+"px"
+	document.getElementById("dimes").style.height=altdimes+"px"
+	document.getElementById("dimes").style.maxHeight=altdimes+"px"
+	document.getElementById("dimes").style.fontSize=altdimes/5+"px"
+	document.getElementById("dimes").title=""+alt+" x "+larg+":"+altdimes+":"+rat
+
+	document.getElementById("dimes").style.top=Math.floor($("#topo").height()-altdimes)+"px"
+	document.getElementById("dimes").title+=";"+Math.floor($("#topo").height()-altdimes)+"px"
+
+	seklogh=Math.floor(1.4*altdimes)
+
+	document.getElementById("seklog").style.width=seklogh+"px"
+	document.getElementById("seklog").style.maxWidth=seklogh+"px"
+	document.getElementById("seklog").style.maxHeight=seklogh+"px"
+	document.getElementById("seklog").style.left="-1px"
+	document.getElementById("seklog").style.top=Math.floor($("#topo").height()-seklogh+1)+"px"
+	document.getElementById("seklog").title=seklogh+"px"
+
+	console.log("a2b:"+a2b)
+	alttopo=Math.floor(a2b*2./7.)
+	//document.getElementById("topo").style.height=alttopo+"px";
+	logosectorh=Math.floor(a2b*125./700.)
+	console.log("logosec:"+logosectorh)
+	plogo=Math.floor(logosectorh/4)
+	//document.getElementById("logos").style.top=alttopo-plogo+"px";
+	//document.getElementById("logos").style.left=3+"px";
+	secmapah=Math.floor(a2b*330.0/700.0)	
+
+	legsph=Math.floor(a2b*121.0/700.0)	
+	qrsph=Math.floor(a2b*53.0/700.0)
+
+
+  console.log("ratset() done.")
+
+  if (typeof(H["limiteconcelho"]!="undefined"))
+  {	loadem ("limiteconcelho")
+	}
+   delete map2;
+  //loadem ("limiteconcelho")
+  contset(modo)
+
+}	
+
+var H={}
+var response;
+var r2;
+var r1;
+var data;
+function loadem(x)
+{   nome=x
+    
+    if (typeof(H[x])=="undefined")
+    {
+    url="http://baze.cm-maia.pt/BaZe/api/api4gj.php?nome="+nome;
+    console.log("url:"+url)
+  
+  fetch(url)
+  .then(response => response.json())
+  .then(data => { 
+    	r2=data;
+    	console.log(data)
+ 		H[nome]={}
+    	H[nome].o=data;
+
+
+      	H[nome].h= L.geoJSON(H[nome].o).addTo(map2);
+      	if (typeof(H[nome].o.properties)!="undefined")
+      	{	H[nome].h.setStyle(H[nome].o.properties)      
+      		console.log("STYLE properties:"+H[nome].o.properties)
+      	}
+      	else
+      	{	estilo={"fill":true, "color":"#A1D243", "stroke":true, "fill":false,"fillColor":"lime"}
+      	H[nome].h.setStyle(estilo) 
+   		}
+  		});
+	}
+  else   // O Objecto já foi carregado
+  { // console.log( "2o if:"+nome)
+      if (H[nome].h._map==null)
+      {
+        console.log("re...add2..")
+        	estilo={"fill":true, "color":"#A1D243", "stroke":true, "fill":false,"fillColor":"lime"}
+
+		H[nome].h=L.geoJSON(H[nome].o).addTo(map2)
+        if (typeof(H[nome].o.properties)!="undefined")
+        {
+        	//        	H[nome].h.setStyle(H[nome].o.properties)  
+ 		}
+       	
+       	H[nome].h.setStyle(estilo)      
+ 
+	   }
+      else
+      { 	console.log("vou remover "+nome)
+        	H[nome].h.remove();      
+        	console.log("... removido..")	
+      }
+  }
+}
+
+function settable()
+{	p = document.getElementById("principal")
+	
+	//q.innerHTML = ""
+	//q.setAttribute("valign", "middle")
+	//q.setAttribute("justify-content", "center")
+	// 	q.setAttribute("text-align", "center")
+	//th=document.createElement("table")
+	//th.id="fg"
+	th=document.getElementById("tabelac")
+
+switch (modo)
+{	case "landscape":
+		fontSize=Math.floor(a2b/50)
+
+		break;
+	default:
+		fontSize=Math.floor(a2b/40)
+		document.getElementById("tabelac").style.display="hidden"
+
+		break;
+}	
+
+	th.style.fontSize=fontSize+"px"	
+	th.cellspacing="0"	
+	th.style.cellspacing="0"
+	th.setAttribute("cellspacing", "0");
+	th.setAttribute("cellpadding", "1");
+
+
+	while (th.rows.length>1)
+		{th.deleteRow(1)}
+
+	//sth.setAttribute("id", "tabelac");
+	th.setAttribute("border", "1");
+	
+	tr=document.createElement("TR")
+	td=document.createElement("TD")
+	td.innerHTML="Screen (javascript)"
+	td2=document.createElement("TD")
+	td2.innerHTML=window.screen.height +" x " + window.screen.width
+
+	tr.appendChild(td)
+	tr.appendChild(td2)
+	th.appendChild(tr)
+
+	tr=document.createElement("TR")
+	td=document.createElement("TD")
+	td.innerHTML="Viewport (jQuery)"
+	td2=document.createElement("TD")
+	td2.innerHTML=$(window).height() +" x " + $(window).width()
+	tr.appendChild(td)
+	tr.appendChild(td2)
+	th.appendChild(tr)
+
+ width  = window.innerWidth || document.documentElement.clientWidth || 
+document.body.clientWidth;
+ height = window.innerHeight|| document.documentElement.clientHeight|| 
+document.body.clientHeight;
+
+	tr=document.createElement("TR")
+	td=document.createElement("TD")
+	td.innerHTML="Several"
+	td2=document.createElement("TD")
+	td2.innerHTML= height +" x " + width
+	tr.appendChild(td)
+	tr.appendChild(td2)
+	th.appendChild(tr)
+
+width=window.screen.availWidth;
+heigth=window.screen.availHeight;
+
+
+	tr=document.createElement("TR")
+	td=document.createElement("TD")
+	td.innerHTML="Available"
+	td2=document.createElement("TD")
+	td2.innerHTML= height +" x " + width
+	tr.appendChild(td)
+	tr.appendChild(td2)
+	th.appendChild(tr)
+	//q.appendChild(th)
+	//q.setAttribute("text-align", "center")
+	//q.setAttribute("display", "table-cell")
+	//q.setAttribute("vertical-align", "middle")
+	//q.setAttribute("vertical-align", "center")
+	//th.style.display="none"
+
+	//console.log("»»»»»»»»»»»»»»» modo-> none"+modo)
+	switch (modo)
+
+	{	case "portrait":
+			document.getElementById("tabelac").style.display="none"
+			document.getElementById("chart1").style.display="none"
+			break;
+		default:
+			document.getElementById("tabelac").style.display="none"
+			document.getElementById("chart1").style.display="none"
+			document.getElementById("chart1").style.backgroundColor="silver"
+			document.getElementById("chart1").style.height=Math.floor(a2b*.3)+"px"
+			document.getElementById("chart1").style.valign="middle"
+			break;
+		
+	}
+
+
+
+	//q.style="<center>"	
+	q.style.valign="middle"	
+	q.style.fontFamily="montserrat"
+	q.style.textAlign = "center"	
+	q.style.alignSelf = "center"
+
+//	lecqar()
+}
+
+
+map2 = 0;
+var modo;
+function contset(modo)
+{	console.log("MODO:"+modo)			
+	if (modo=="landscape")
+	{	//	p = document.getElementById('principal')
+		q = document.getElementById('compl')
+		p = document.getElementById("principal")
+		document.getElementById("tabelac").style.display=""
+	}
+	else
+	{	q = document.getElementById('compl')
+		p = document.getElementById("principal")
+		document.getElementById("tabelac").style.display="none"
+	
+	}
+	settable()
+	p.innerHTML=""
+
+	while (p.childElementCount>1)
+		p.removeChild(p.lastChild)
+
+	nmap=document.createElement("div")
+	nmap.id="osmap2"
+	p.appendChild(nmap)
+
+	zoom=11
+	if (l2b>550) zoom=15
+	zoom = 16
+
+	console.log("++++ INIT MAP ++++")
+ //   -8.62324833869934,           41.23392131192253
+
+  map2 = L.map('osmap2', { zoomControl: false }).setView([41.2339, -8.62325], zoom); //Zoom 20 - focado na cobertura verde
+ 
+    $("#osmap2").height($(p).height()+"px").width(($(p).width()-2)+"px");
+
+  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicGVkcm9jY3BpbWVudGEiLCJhIjoiY2tqYjl4Z241Mzl4ZDJ6bGdjNjJ3ODRveSJ9.hu3b-A7Hx7SuJR73jPNAbw', {
+    maxZoom: 21,
+   attribution: '&copy; <a href="http://baze.cm-maia.pt/BaZe" target="pcp">BaZe 2022</a>',
+    id: 'mapbox/light-v9',
+    tileSize: 512,
+    zoomOffset: -1
+  }).addTo(map2);
+
+
+   // Creating a Layer object
+      //   var layer = new L.TileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicGVkcm9jY3BpbWVudGEiLCJhIjoiY2tqYjl4Z241Mzl4ZDJ6bGdjNjJ3ODRveSJ9.hu3b-A7Hx7SuJR73jPNAbw');
+       //  map2.addLayer(layer);  // Adding layer to the map
+         
+         
+if (typeof(e0)=="undefined")
+{	queryString = window.location.search;
+	
+	es = new URLSearchParams(window.location.search)
+	//console.log("ES"+es+typeof(es))
+	e0 = es.get('e0')
+	console.log("e0"+e0+typeof(e0))
+
+if (e0==null)
+{e0="lawson"}
+else e0=e0.toLowerCase()
+
+}
+
+console.log("================e0:"+e0)
+mostra(e0)
+  //       var overlay = L.imageOverlay(imageUrl, Bounds,{ opacity: .3 });
+  //      overlay.addTo(map2);
+
+   map2.invalidateSize();
+
+}
+
+
+function mostra(x)
+{	e0=x
+	// Creating Image overlay
+         var imageUrl = './CFD/OneDrive_1_14-4-2022/resultados simulações/Análise estática - critério Lawson.png';
+         var videoUrl = './CFD/OneDrive_1_14-4-2022/resultados simulações/Análise dinâmica - .MP4';
+         var imageLawson = './CFD/OneDrive_1_14-4-2022/resultados simulações/Análise estática - critério Lawson.png';
+         var imageA0 = './CFD/OneDrive_1_14-4-2022/resultados simulações/ezgif-3-b0078075ee.gif';
+         var imageA180 = './CFD/OneDrive_1_14-4-2022/resultados simulações/ezgif-1-296516d76a.gif';
+         var imageA112 = './CFD/OneDrive_1_14-4-2022/resultados simulações/eezgif-3-c8637c7aab.gif';
+         var imageA112 = './CFD/OneDrive_1_14-4-2022/resultados simulações/ezgif-3-e7ba3312f2.gif';
+         var imageA315 = './CFD/OneDrive_1_14-4-2022/resultados simulações/ezgif-3-78c4eaf6b9.gif';
+
+
+         var Bounds = [[41.23681778571305, -8.619858026504518], [41.23134745732574, -8.626998066902162]];
+
+
+switch (x)
+{	case "lawson":
+		 overlay = L.imageOverlay(imageLawson, Bounds,{ opacity: .3 });
+     overlay.addTo(map2);
+     document.getElementById("simag").selectedIndex=0
+		break;
+	case "0":
+			overlay = L.imageOverlay(imageA0, Bounds,{ opacity: .2 });
+      overlay.addTo(map2);
+     document.getElementById("simag").selectedIndex=1
+
+		break;
+	
+	case "112":
+			overlay = L.imageOverlay(imageA112, Bounds,{ opacity: .2 });
+      overlay.addTo(map2);
+     document.getElementById("simag").selectedIndex=2
+		break;
+	case "180":
+			overlay = L.imageOverlay(imageA180, Bounds,{ opacity: .2 });
+      overlay.addTo(map2);
+     document.getElementById("simag").selectedIndex=3
+
+		break;
+	case "315":
+			overlay = L.imageOverlay(imageA315, Bounds,{ opacity: .2 });
+      overlay.addTo(map2);
+     document.getElementById("simag").selectedIndex=4
+
+		break;
+	
+	default:
+		 overlay = L.imageOverlay(imageLawson, Bounds,{ opacity: .3 });
+         overlay.addTo(map2);
+     document.getElementById("simag").selectedIndex=0
+
+
+}
+
+
+
+}
+
+</script>
+</head>
+
+<body onload="ratset(); settable()" onchange="ratset()" onresize="ratset()" style='background: black;margin:2px;font-family: montserrat;'>
+
+<div id=topo style='width:90%;height:10%;text-align: center;  border: 1px dotted #A1D243;display:inline-block;position:relative;background: #A1D243;margin:0px;'>
+	
+	<div id=logo1 style='width:25%;top:5%;left: 5%;position: relative;align-content: left;'><img src='http://baze.cm-maia.pt/BaZe/videowall/pics/maiabaze.png' width='100%'> </div>
+	<div id=logo2 style='width:25%;top:5%;left: 5%;position: relative;align-content: left;'><img src='http://baze.cm-maia.pt/BaZe/videowall/pics/isilogo.png' width='100%'> </div>
+	<div id=dimes style='border:solid 1px lime;width:3px;heigth:3px;valign:bottom;align-self: bottom;position:absolute;left:100;display: none;'></div>	
+	<div id=seklog style='border:solid 0px lime;width:3px;heigth:3px;valign:bottom;align-self: bottom;position:absolute;left:10;'><img src='http://baze.cm-maia.pt/BaZe/videowall/pics/MBQualar.png' width="100%"></div>
+
+<!--	<div id=dimes2 style='border:solid 1px lime;width:3px;heigth:3px;valign:bottom;align-self: bottom;position:absolute;top:12px; left:100px;'>9898</div> -->
+</div>
+
+<div id=principal style='width:58.5%;height:79%;text-align: center;display:inline-block;border:1px dotted white;margin:0px;background: white;position:absolute;justify-content: center;text-align:center;align-content: center;' title='PRINCIPAL'><center><br>
+	<!-- <table id=tabelac><tr><td>Original<td>Original</table> -->
+	</div>
+
+<div id=compl style='width:40%;height:79%;text-align: center;display:inline-block;border:1px dotted white;margin:0px;background: white;position: absolute;vertical-align: middle;align-content: center;' title='Complementar'><center><center><br><table id=tabelac style='margin-bottom:15px;'><tr><td>Original<td>Original</table>
+
+<script>
+function actimg()
+{	sz=document.getElementById('simag')
+	console.log("_____"+sz[sz.selectedIndex].value)
+	mostra(sz[sz.selectedIndex].value)
+}
+
+</script>
+<br>
+<br><br>
+
+  <label for="simag">Escolha a simulação/orientação do vento:</label><br>
+<select onchange='actimg()' id=simag size=5 width=20>
+	<option value="Lawson">Lawson</option>
+	<option value="0">0º</option>
+	<option value="112">112.5º</option>
+	<option value="180">Sul</option>
+	<option value="315">315</option>
+</select>
+
+<br>
+
+<table id=tabqar border=0 width='92%' style='margin-bottom: 15px;display: none;'>
+			<tr><td style='font-weight: 555;'>Praça do Município
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>PM10
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>PM25
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>NO<sub>2</sub>
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>O<sub>3</sub>
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>SO<sub>2</sub>
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>CO
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>NO
+					
+			<tr><td style='font-weight: 555;'>Rot. da Estrada Nacional
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>PM10
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>PM25
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>NO<sub>2</sub>
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>O<sub>3</sub>
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>SO<sub>2</sub>
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>CO
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>NO
+					
+
+			<tr><td style='font-weight: 555;'>Parque de Avioso
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>PM10
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>PM25
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>NO<sub>2</sub>
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>O<sub>3</sub>
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>SO<sub>2</sub>
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>CO
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>NO
+
+			<tr><td style='font-weight: 555;'>Parque de Avioso
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>PM10
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>PM25
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>NO<sub>2</sub>
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>O<sub>3</sub>
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>SO<sub>2</sub>
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>CO
+					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>NO
+			
+</table>
+		<div id=chart1 width='90%' height='30%' style='width:80%;border:1px dotted lime;min-height: 30%;' valign=middle><br>[---]<br><br></div>
+
+</div>
+
+<div id=fundo style='width:100%;height:9%;text-align: center;display:inline-block;border:1px solid white;background: white;position:absolute;'><p id=fundoct align=right  valign=top style="margin:1px;">
+	<a href='http://baze.cm-maia.pt/BaZe' title='Página Oficial BaZe'>+ info</a>&nbsp;<img src='http://baze.cm-maia.pt/BaZe/videowall/pics/BaZe2022.png' height="90%" >&nbsp;&nbsp;&nbsp;&nbsp;</p>
+</div>
+
+<script>
+
+tos="";
+ rts="";
+SetTWAPI2=[];
+var kb;
+function lecqar()
+{
+
+switch(modo)
+{		case "portrait":
+				fontSize=l2b/30
+					break;
+		
+
+}
+
+url="http://baze.cm-maia.pt/BaZe/api/lastpqart.php"
+$.getJSON(url, function(r){
+    kb=r;
+ //		markdata(kb,map2)
+    console.log(r)
+  SerTWAPI2=[]    
+    for (j in r.features[0].properties.data)
+        {   dum=new Date(r.features[0].properties.data[j])
+
+          //  SerTWAPI2.push([dum.getTime(), r.features[0].properties.Temp[j]] )
+
+          }
+ //  
+  }).then(
+ 			function(X) {
+
+ //					console.log("»»»»»»»»»»»»»»»»»»»»»»»")
+					th = document.getElementById("tabqar")
+					th.style.fontSize=fontSize+"px"
+					for (i=0;i<th.rows.length;i++)
+					{	//	console.log("i:"+i)
+			//			  console.log (i+":"+kb.features[i].properties.local)
+					switch(kb.features[i].properties.local)
+					{	case "FORUM DA MAIA":
+							kb.features[i].properties.local	="Parque Central"
+							break;
+						case "Sao Frutuoso":
+							kb.features[i].properties.local	="Siderurgia"
+							break;
+						case "Estrada de Santa Eufémia":
+							kb.features[i].properties.local	="Parque de Avioso"
+							break;
+						case "ROTUNDA DA ESTRADA NACIONAL N14":
+							kb.features[i].properties.local	="Rot. N14"
+							break;
+					}
+
+
+/*
+							tos=kb.features[i].properties.local.split(" ")
+							//console.log("tos:"+tos)
+							for (n in tos)
+							{	rts=tos[n].toLowerCase().replace("sao", "São").replace("émia", "êmia").replace("otunda", "ot.").replace("strada", "str.")
+								if (rts.length>2)
+								{ dum=rts[0].toUpperCase()+rts.substring(1,rts.length) }
+								else
+								{dum=rts}
+								
+								//console.log("dum:"+dum)
+								tos[n]=dum;
+							}
+							tos=tos.join(" ")
+							//console.log("tos:"+tos)
+*/
+							//th.rows[i].cells[0].innerHTML=kb.features[i].properties.popupContent;
+							tos = kb.features[i].properties.local
+							th.rows[i].cells[0].innerHTML=tos
+
+				mini2s=1			
+				for (j=1; j<8; j++)
+				{	//console.log("****************" + typeof(kb))
+					//console.log(i+", "+j)
+							
+					if(kb.features[i].properties[elem[j]]==null)
+					{	th.rows[i].cells[j].style.backgroundColor="gray"
+						th.rows[i].cells[j].title="sem dados"
+					//	kb.features[i].properties.icon="http://baze.cm-maia.pt/BaZe/videowall/pics/aqi0.png"
+						mini2s=0
+					}	
+					else
+					{	k=1
+
+						while (kb.features[i].properties[elem[j]]>lim[j][k-1])
+							{k++}
+						//k++; 
+						; ///		console.log("KOR:"+k)
+					
+						th.rows[i].cells[j].style.backgroundColor=kor[k]
+						th.rows[i].cells[j].title=kb.features[i].properties[elem[j]]+"("+k+")"
+						kb.features[i].properties.icon="http://baze.cm-maia.pt/BaZe/videowall/pics/aqi"+k+".png"
+						if ((k>mini2s) && (mini2s!=0))
+						{
+							mini2s=k;
+						}
+					}
+						
+				}
+			//	console.log("mini2s:"+mini2s)
+						kb.features[i].properties.icon="http://baze.cm-maia.pt/BaZe/videowall/pics/aqi"+mini2s+".png"
+				
+			}	
+		//	console.log("Going to markdata")
+				markdata(kb, map2);
+    }
+  );
+}
+
+
+
+function markdata(o, mappa)
+{   //console.log("o:"+o.type+", features"+o.features)
+    
+    if (typeof(o.type)=="undefined")
+    {
+        console.log("===============> Sem type ?")
+    }
+    else
+    {
+      switch (o.type)
+      {      case "FeatureCollection":
+                      for (sf in o.features)
+                      {   // console.log ("vou recorrer "+o.features[sf]) 
+                            markdata(o.features[sf], mappa)
+                      }
+                      break
+              case "Feature":
+              { //  console.log(o.geometry.type)
+                  switch (o.geometry.type)
+                  {
+                      case "Point":
+                        //  console.log("feature:PONTO!")
+
+
+                          if (typeof(o.h)=="undefined")
+                          {   if (typeof(o.properties.icon)=="undefined")
+                              {  iconurl="./pics/micon.png";
+                              }
+                              else
+                              { iconurl=o.properties.icon;
+                              }
+
+                              dIcon=L.icon({ iconUrl: iconurl, iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -28] })
+//                                console.log("ICON FROM properties")
+                
+                                o.h=L.geoJSON(o, {   pointToLayer: function (feature, latlng) { 
+                                  return L.marker(latlng, {icon: dIcon}); },
+                                        onEachFeature: onEachFeature}).addTo(mappa)
+              
+
+
+/*
+
+              H[nome].o.features[k].h= L.geoJSON([{"geometry":{ "type": "Point", "coordinates":[H[nome].o.features[k].geometry.coordinates[0], H[nome].o.features[k].geometry.coordinates[1] ] }, "type":"Feature", "properties":{"popupContent":H[nome].o.features[k].properties.popupContent+"("+H[nome].o.features[k].geometry.coordinates[0]+")<br><div id='mko"+k+"'></div>"}} ],
+            {   pointToLayer: function (feature, latlng) 
+             { return L.marker(latlng, {icon: dummyIcon}); },
+                onEachFeature: onEachFeature}
+              ).addTo(map0);
+      
+*/
+
+
+
+                          }
+                          else
+                          { if (o.h._map==null)
+                              {o.h.addTo(mappa)}
+                              else
+                              {      
+                                o.h.remove()
+                              }
+                          }
+
+
+                          break;
+                      default:
+                          console.log("feature:"+o.geometry.type)
+                          
+                          if (typeof(o.h)=="undefined")
+                          { o.h=L.geoJSON(o).addTo(mappa)
+                          }
+                          else
+                          { if (o.h._map==null)
+                              {o.h.addTo(mappa)}
+                              else
+                              {      
+                                o.h.remove()
+                              }
+                          } 
+                          break;
+                  }
+
+
+                               if (typeof(o.properties.style)!=="undefined")
+                               {   
+                                console.log("++++++++++ Style"+o.properties.style)
+                                 o.h.setStyle(o.properties.style)      
+                              }
+                              else
+                              {
+                                console.log("------ ---- - NO Style"+o.properties.style)
+
+                              }
+
+
+              }
+      }
+    }
+    return;
+}
+
+function onEachFeature(feature, layer) {
+ 
+   popupContent=""
+
+    if (feature.properties && feature.properties.popupContent) {
+      popupContent += feature.properties.popupContent;
+    }
+    layer.bindPopup(popupContent);
+    layer.bindPopup(popupContent, { maxWidth: "auto"});
+  }
+
+
+
+//gh=setInterval(function(){lecqar(), 50000})
+</script>
+<!-- Default Statcounter code for PWall
+http://baze.cm-maia.pt/BaZe/videowall/pwall2.htm -->
+<script type="text/javascript">
+var sc_project=12707570; 
+var sc_invisible=1; 
+var sc_security="1bdfb879"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="Web Analytics
+Made Easy - Statcounter" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/12707570/0/1bdfb879/1/"
+alt="Web Analytics Made Easy - Statcounter"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+
+ 
+
+
+</body>
+</html>
