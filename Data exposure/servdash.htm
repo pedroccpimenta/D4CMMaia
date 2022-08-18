@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="it">
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=yes"/>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<LINK REL="SHORTCUT ICON" HREF="./pics/minilogobazelaranja.png" type="image/x-icon">
+
+<style>
+
+.highcharts-figure,
+.highcharts-data-table table {
+    /* min-width: 360px;
+    max-width: 800px; */
+    width:80%;
+    height: 60%;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+
+
+</style>
+	</head>
+	<body onload="leds();" style='font-family: montserrat'>
+		
+			<table cellspacing="0" border=1 style='width:100%;'>
+					<tr><td id=topbc align=center style='background: orange;'><big>BaZe Datalake Monitoring
+			</table>
+				<table cellspacing="0"  border=1 width='100%'>
+				<tr><td align=center style='width:50%;'>
+
+					<div id=chart1 width='50%'  style='width:50%;border:1px dotted lime;min-height: 20%;min-width:500px;height: 275px;' valign=middle><br><br><br><br>
+				<img src='./pics/Spinner-1s-131px.gif'>
+			<br>[Last hours...]<br></div>
+
+				<td align=center>
+
+					<div id=chart2 width='50%'  style='height: 250px;width:50%;border:1px dotted lime;min-height: 20%;min-width:500px;' valign=middle><br><br><br><br>
+				<img src='./pics/Spinner-1s-131px.gif'>
+			<br>[Last hours...]<br></div>
+			<!--
+			A diminuição do espaço ocupado é devida à eliminação de dados de simulação (estacionamento).
+			<a href=http://baze.cm-maia.pt/BaZe/pwall3.htm target=new>pwall3</a> está agora a reportar os dados reais recolhidos pelas câmaras da Yunex.
+			--><tr><td align=center>
+
+			<div id=chart3 width='50%'  style='height: 250px;width:50%;border:1px dotted lime;min-height: 20%;min-width:500px;' valign=middle><br><br><br><br>
+				<img src='./pics/Spinner-1s-131px.gif'>
+			<br>[Last hours...]<br></div>
+
+			<td align=center>
+
+			<div id=chart4 width='50%' style='height: 250px;width:50%;border:1px dotted lime;min-height: 20%;min-width:500px;' valign=middle><br><br><br><br>
+				<img src='./pics/Spinner-1s-131px.gif'>
+			<br>[Last hours...]<br></div>
+
+			
+				</table>
+
+
+
+	</body>
+
+
+<script>
+var rs;
+var datads=[]
+var dataxs=[]
+var datats=[]
+var dpu=[]
+var du=[]
+var dn=[]
+var ds=[]
+var dio=[]
+var di=[]
+var dst=[]
+colors = ['#C0C0C0', '#808080','#101010', 'black', '#050505', '#E80C7A'];
+series=[]
+ytitle=""
+labelText=""
+
+function leds()
+{
+
+		document.getElementById("chart1").style.height="280px";
+		document.getElementById("chart2").style.height="280px";
+		document.getElementById("chart3").style.height="280px";
+		document.getElementById("chart4").style.height="280px";
+
+		url="http://baze.cm-maia.pt/BaZe/api/bazedl.php";
+   		console.log("url:"+url)
+  
+		$.getJSON(url, function(r){
+				rs=r
+		for (j in r.s1)
+ 		{	datads[j] = (new Date(r.s1[j])).getTime()
+ 			dataxs[j]= [datads[j], (new Date(r.s2[j])).getTime()]
+        	dpu[j]=[datads[j], r.s3[j]]
+ 		}
+
+ 		period ="last "+ ((datads[0]-datads[datads.length-1])/1000/60/60/24).toFixed(0)+" days"
+		ytitle="Datetime vs file timestamp ("+period+")"
+ 		series=[{name:'t*', data:dataxs, marker:{enabled:true}}]
+ 		plotchartdu("chart1")
+		ytitle="Datalake disk usage (Mb) ("+ period  +")"
+		labelText = ((r.s3[0]-r.s3[r.s3.length-1])/(datads[0]-datads[datads.length-1])*1000*60*60*24).toFixed(2)+" Mb/day"
+ 		series=[{name:'ds', data:dpu, marker:{enabled:true}}]
+ 		plotchartdu("chart2")
+		labelText=""
+
+		})
+		lecgs()
+}
+
+
+function lecgs()
+{
+	url="http://baze.cm-maia.pt/BaZe/api/bazedl.php";
+   		//console.log("url:"+url)
+  
+		$.getJSON(url, function(r){
+		rs=r
+		for (j in r.st1)
+ 		{	datats[j] = (new Date(r.st1[j])).getTime()
+ 		
+ 			du[j]=[datats[j], r.sp1[j]]
+ 			dn[j]=[datats[j], r.sp2[j]]
+ 			ds[j]=[datats[j], r.sp3[j]]
+ 			dio[j]=[datats[j], r.sp4[j]]
+ 			di[j]=[datats[j], r.sp5[j]]
+ 			dst[j]=[datats[j], r.sp6[j]]
+ 		}
+		period ="last "+ ((datats[0]-datats[datats.length-1])/1000/60/60/24).toFixed(0)+" days"
+		
+
+		ytitle="Activity ("+period+")"
+ 		series=[{name:'user', data:du, marker:{enabled:true}},
+ 				{name:'nice', data:dn, marker:{enabled:true}},
+ 				{name:'sys', data:ds, marker:{enabled:true}},
+ 				{name:'io', data:dio, marker:{enabled:true}},
+ 				{name:'steal', data:dst, marker:{enabled:true}}
+ 		]
+ 		plotchartdu("chart3")
+		ytitle="Idle ("+period+")"
+
+ 		series=[{name:'idle', data:di, marker:{enabled:true}}]
+ 		plotchartdu("chart4")
+
+
+		})
+}
+
+
+function plotchartdu(chart)
+{
+	Highcharts.setOptions({chart: {style: {fontFamily: 'Montserrat'}}});
+	
+wa=	Highcharts.chart(chart, {
+tooltip: {
+        xDateFormat: '%Y-%m-%d %H:%M:%S',
+        shared: true
+    },
+
+	colors: colors,
+    title: { text: ytitle },
+    yAxis: { title: { text: ytitle} },
+
+    xAxis: { type:'datetime' },
+    legend: { layout: 'vertical',  align: 'right',   verticalAlign: 'middle' },
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            } //,  pointStart: 2010
+        }
+    },
+    series: series ,
+    responsive: {
+        rules: [{condition: { maxWidth: 500 },
+            chartOptions: {legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    			} 
+
+});
+
+if (labelText!=false)
+{
+  wa.renderer.text(labelText, 80, 80)
+      .attr({
+        zIndex: 5
+      })
+      .css({
+        fontSize: '12px'
+      })
+      .add();
+}
+}
+
+
+//gh=setInterval(function(){lecgs()}, 15*60*1000)
+gd=setInterval(function(){leds()}, 30*60*1000) // novos dados a cada 30 minutos
+jh=setInterval(function(){mcor()}, 10*1000)
+bc=1
+function mcor()
+{
+	bc =1-bc;
+
+	if (bc)
+	{ document.getElementById("topbc").style.background="lime";
+	}
+	else
+	{ document.getElementById("topbc").style.background="orange"
+	}
+}
+
+</script>
+</html>
