@@ -1,0 +1,9 @@
+0008231 # Nº de Bombeiros
+0009787 # Temperatura máxima do ar
+0008349  # Nº de Partos   Linhas cujo primeiro caractere seja "#" não são processadas.
+0008417  # Caixas multibanco no Concelho
+0008234  # Nados vivos
+0009771 # Rendimento colectável
+0009605
+0009604 
+0008662
