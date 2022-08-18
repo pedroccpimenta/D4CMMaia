@@ -1,0 +1,2 @@
+MariaUser="USERNAME"
+MariaUpwd="PASSWORD"
