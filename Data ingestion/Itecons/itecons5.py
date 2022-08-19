@@ -30,10 +30,6 @@ if leitura==True:
                                          user=configItecons.User,
                                          password=configItecons.Upwd
                                          )
-        """
-        user='ForumMaiaRO',
-        password='kae2yeeee-Me'
-        """
 
         if connection.is_connected():
             cursor = connection.cursor(dictionary = True)
@@ -112,11 +108,6 @@ if persiste:
                 port=3306,
                 database="BAZE")
 
-        """
-        user="ppimenta",
-        password="pim53enta",
-        """
-
     
     except Error as e:
         print(f"Error connecting to MariaDB Platform: {e}")
@@ -152,19 +143,16 @@ else:
         message["Subject"] = "Cobertura Verde necessita de rega"
         
         message["From"]=configGMail.UserFrom
-        message["To"]="ppimenta@ucp.pt;pimenta@dsi.uminho.pt"
+        message["To"]="ppimenta@ucp.pt;pimenta@dsi.uminho.pt;emanuel.ferreira@cm-maia.pt;bruno.figueiredo@cm-maia.pt"
         message["ReplyTo"]="ppimenta@cm-maia.pt"
-        """
-        message["From"] = "pedroccpimenta@gmail.com"
-        message["To"] = "ppimenta@cm-maia.pt"
-        """
+        
         # emanuel.ferreira@cm-maia.pt emanuel.ferreira91@gmail.com
         # bruno.figueiredo@cm-maia.pt brunomaf75@gmail.com
         
     # Create the plain-text and HTML version of your message
         text = """\
     Esta é uma mensagem automática e de teste.<br>
-    (Emanuel, Bruno, vou enviar este email tb para os Vs. gmails como teste)
+    (Emanuel, Bruno, este é um email de teste :-) !!)
     <hr color=green>
     O sistema de monitorazação da humidade no solo da Cobertura Verde reporta, a esta data ("""+ datamedida +""")
         um valor de """+str(SH1)+"""% (minímo para alarme de """+str(minSH1)+"""%) para SH1 e de """+str(SH2)+\
