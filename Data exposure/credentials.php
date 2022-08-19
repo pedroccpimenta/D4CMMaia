@@ -1,7 +1,7 @@
 <?php
 // Credenciais para acesso ao datalake.
 // This user is just used to read data and expose it through REST API
-// *** deleted lines
+// *** deleted lines 
 
 // example 
 $servername = "localhost"; // keep this line (if the script is running in the MariaDB host)
