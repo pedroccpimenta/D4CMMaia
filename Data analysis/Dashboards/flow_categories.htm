@@ -1,0 +1,686 @@
+<!-- FLOW FROM THE SKY: CATEGORIES -->
+<!-- EMANUEL FERREIRA - NOVEMBER 2022 -->
+<!-- emanuel.ferreira@cm-maia.pt -->
+
+<html>
+<head>
+<meta charset="utf-8">
+<title>FLOW CATEGORIES</title>
+<LINK REL="SHORTCUT ICON" HREF="./pics/minilogobaze.png" type="image/x-icon">
+<script>tstart=new Date();</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<!-- Open Street maps  -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+<style> 
+
+  html, body {
+      height: 100%;
+      margin: 0;
+    }
+    
+
+.highcharts-figure,
+.highcharts-data-table table {
+    /* min-width: 360px;
+    max-width: 800px; */
+    width:100%;
+    height: 90%;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 700px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+
+.myButton {
+	background-color:#7892c2;
+	border-radius:28px;
+	border:1px solid #4e6096;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:16px;
+	padding:11px 20px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #283966;
+}
+.myButton:hover {
+	background-color:#476e9e;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+.div-left{
+    float:left;
+    padding-left: 10px;
+    padding-right: 10px;
+   	width: 48%;
+   	min-height: 50%;
+    min-width:720px;
+    position: relative;
+}
+
+.div-right{
+    float:left;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 48%;
+    min-width:720px;
+    position: relative; 
+}
+
+@media (orientation: landscape) {
+  body {
+    flex-direction: row;
+  }
+}
+
+@media (orientation: portrait) {
+  body {
+    flex-direction: column;
+  }
+}
+
+.mapStyle {
+      width: 100%;
+      height: 55%;      
+}
+
+.footer {
+   position: fixed; 
+   color: white;
+   text-align: center;
+   width:9%;
+   height:9%;
+   bottom: 15px;
+   right: 15px;
+   border:1px solid white;
+   text-align: center;
+}
+</style>
+
+
+<script>
+$.ajaxSetup({
+    async: false
+})
+
+	var hy="_"
+	var ars="_"
+	function loadses()
+	{ 	
+
+queryString = window.location.search;
+//console.log("queryString:", queryString)
+es=queryString.split("?")
+es = new URLSearchParams(window.location.search)
+
+e0 = es.get('e0')
+//console.log("e0:", e0)
+//console.log("typeof(e0):", typeof(e0))
+if (e0 == null) 
+	{ e0="flow" }
+	toss=0;
+
+		lh=document.getElementById("serie");
+		url="http://10.10.10.32/D4CMMaia/flow_api2.php";
+
+		$.getJSON(url, function(r){
+		ars=r;
+
+		for (j in r['flow'].properties.C_G)
+ 		{	
+ 			//if (j==0) continue;
+
+ 			nopi = document.createElement("option")
+ 			nopi.value = r['flow'].properties.C_G[j]
+ 			nopi.text = r['flow'].properties.C_G[j]
+ 			nopi.title = r['flow'].properties.C_G[j]
+ 			
+ 			if (e0.toLowerCase() == r['flow'].properties.C_G[j]) 
+ 			{
+ 				toss=j-1;
+ 			}
+
+ 			lh.appendChild(nopi)
+
+ 		}
+
+ 		//console.log("toss:", toss)
+
+ 		lh.selectedIndex=toss;
+
+		
+		setTimeout(function (){ document.getElementById("serie").size=Math.min(15, ars['flow'].properties.C_G.length)}, 1000);
+
+		})		
+		setTimeout(getdata, 1200);
+}
+
+	rs=[]
+	
+	sor=0;
+	NomeSerie=""
+	function getdata()
+	{	sor=document.getElementById("serie");
+
+		console.log("getdata")
+		
+		if (sor.selectedIndex==-1) 
+			{	
+				sor.selectedIndex="0";
+				//sor.setAttribute("selectedIndex",0)
+			}
+
+		console.log("indice:", sor.selectedIndex)
+
+		if (sor.selectedIndex==-1) url="http://10.10.10.32/D4CMMaia/flow_api2.php?C_G=C115_G1";
+		else url="http://10.10.10.32/D4CMMaia/flow_api2.php?C_G=" + sor.options[sor.selectedIndex].value;
+  
+		$.getJSON(url, function(r){
+		rs=JSON.parse(JSON.stringify(r))
+		
+		rs=r
+
+		// Camera / Gate
+		cg = rs.flow.properties.C_G
+
+		// Category
+		Category = rs.flow.properties.Category
+
+		// Trajectory_Start_datetime
+		Trajectory_start_datetime = rs.flow.properties.Trajectory_start_datetime
+
+		// Trajectory_end_datetime
+		Trajectory_end_datetime = rs.flow.properties.Trajectory_end_datetime
+
+		// Average_speed_kpxh
+		Average_speed_kpxh = rs.flow.properties.Average_speed_kpxh
+
+		// Duration_of_occurrence_s
+		Duration_of_occurrence_s = rs.flow.properties.Duration_of_occurrence_s
+
+		// Stationary_duration_s
+		Stationary_duration_s = rs.flow.properties.Stationary_duration_s
+
+
+	
+
+		// ADD HOURS TO THE DAY
+		Inicio2 = []
+		for (i in Trajectory_end_datetime)
+		{
+			Inicio2.push(Trajectory_end_datetime[i])
+		}
+
+		Inicio = Inicio2
+
+		// CREATE AN ARRAY TO CHANGE THE DATA FORMAT
+		tt = []
+
+		for (i in Inicio)
+		{
+			// CHANGE DATA TO EPOCH UNIX (HIGHCHARTS ONLY READS EPOCH)
+
+			const date = new Date(Inicio[i]);
+			const timestampInMs = date.getTime();
+			const unixTimestamp = Math.floor(date.getTime());
+			tt[i] = unixTimestamp
+		}
+
+
+		Bicycle = []
+		Bus = []
+		Car = []
+		Heavy = []
+		Light = []
+		Motorcycle = []
+
+		for (x in Category)
+		{
+			if (Category[x] == "bicycle"){Bicycle.push(Average_speed_kpxh[x])}
+			if (Category[x] == "bus"){Bus.push(Average_speed_kpxh[x])}
+			if (Category[x] == "car"){Car.push(Average_speed_kpxh[x])}
+			if (Category[x] == "heavy"){Heavy.push(Average_speed_kpxh[x])}
+			if (Category[x] == "light"){Light.push(Average_speed_kpxh[x])}
+			if (Category[x] == "motorcycle"){Motorcycle.push(Average_speed_kpxh[x])}				
+		}
+
+		/*
+		console.log("sadasdasdasd",Bicycle)
+		console.log("sadasdasdasd",Bus)
+		console.log("sadasdasdasd",Car)
+		console.log("sadasdasdasd",Heavy)
+		console.log("sadasdasdasd",Light)
+		console.log("sadasdasdasd",Motorcycle)*/
+
+		/*
+		// CATEGORY + TIME 
+		c2p = []
+		for (i in tt) c2p.push([tt[i], Category[i]])
+		console.log(c2p)
+			
+		// AVERAGE SPEED KPXH + TIME 
+		ask2p = []
+		for (i in tt) ask2p.push([tt[i], Average_speed_kpxh[i]])
+		console.log(ask2p)
+
+		// DURATION OF OCCURRENCE IN S + TIME 
+		do2p = []
+		for (i in tt) do2p.push([tt[i], Duration_of_occurrence_s[i]])
+		console.log(do2p)
+
+		// STATIONARY DURATION IN S + TIME 
+		sd2p = []
+		for (i in tt) sd2p.push([tt[i], Stationary_duration_s[i]])
+		*/
+
+		// BICYCLE + TIME 
+		b2p = []
+		for (i in tt) b2p.push([tt[i], Bicycle[i]])
+			
+		// BUS + TIME 
+		bs2p = []
+		for (i in tt) bs2p.push([tt[i], Bus[i]])
+
+		// CAR + TIME 
+		c2p = []
+		for (i in tt) c2p.push([tt[i], Car[i]])
+
+		// HEAVY + TIME 
+		h2p = []
+		for (i in tt) h2p.push([tt[i], Heavy[i]])
+
+		// LIGHT + TIME 
+		l2p = []
+		for (i in tt) l2p.push([tt[i], Light[i]])
+
+		// MOTORCYCLE + TIME 
+		m2p = []
+		for (i in tt) m2p.push([tt[i], Motorcycle[i]])
+
+	
+		lechh=document.getElementById("lech")
+		lechh.innerHTML = rs.flow.properties.CAMERA_GATE
+
+		ulreg = Inicio.length - 1
+
+		if (Inicio[ulreg] != "")
+		 lechh.innerHTML += " (Last update: " + Inicio[ulreg] +")"; // vai buscar o index do 1 elemento
+
+		lechh.innerHTML+="<hr color=lime>BaZe datalake's last update: " + Inicio[ulreg]
+		//lechh.innerHTML+="<br>Ultima tentativa de obter dados mais recentes: "+Inicio[ulreg]
+		})
+
+		setTimeout(function(){gog()}, 500)
+		
+}
+
+function cplot()
+	{	console.log("cplot---")
+	
+		Highcharts.chart('chart1', {
+
+		chart: {
+		zoomType: 'x',
+        type: 'spline'
+
+    	},
+    title:    { text: "Vehicle average speeds (KPXH)" },
+    subtitle: { text: "Source: FLOW FROM THE SKY - " + rs.flow.properties.CAMERA_GATE},
+       xAxis: {
+        	type: 'datetime',
+			dateTimeLabelFormats: { // don't display the dummy year
+            month: '%e.%b',
+            year: '%b'
+        	},
+			
+        	title: {
+            	text: 'Datetime'
+        	},
+    	},
+				
+    	yAxis: {
+        	title: {
+            	text: "Vehicle average speeds (KPXH)" 
+        	},
+        	min: 0
+    	},
+     	tooltip: {
+        	xDateFormat: '%Y-%m-%d %H:%M:%S',
+        	shared: true
+        },
+     plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false,
+            }
+        }
+    },
+
+    series: [{
+        name: "Bicycle",
+        data: b2p,
+		
+    }, {
+		name: "Bus",
+		data: bs2p,
+	
+	}, {
+		name: "Car",
+		data: c2p,
+
+	}, {
+		name: "Heavy",
+		data: h2p,
+
+	}, {
+		name: "Light",
+		data: l2p,
+	
+	}, {
+		name: "Motorcycle",
+		data: m2p,
+
+	}],
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom',
+                	}
+            	}
+        	}]
+    		}
+});
+}
+
+function cplot2()
+{
+	console.log("cplot---2")
+
+	ndec=0;
+	Highcharts.chart('chart1', {
+    chart: {
+        type: 'column',
+		zoomType: 'x',
+    },
+	title:    { text: "Vehicle average speeds (KPXH)" },
+    subtitle: { text: "Source: FLOW FROM THE SKY - " + rs.flow.properties.CAMERA_GATE },
+     xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: { // don't display the dummy year
+            month: '%e.%b',
+            year: '%b'
+        },
+        title: {
+            text: 'Datetime'
+        },
+        tooltip: {
+        xDateFormat: '%Y-%m-%d %H:%M:%S',
+        shared: true}
+    },
+    yAxis: {
+        title: {
+            text: "Vehicle average speeds (KPXH)" 
+        },
+        min: 0
+    },
+    tooltip: {
+        /*headerFormat: '<span style="font-size:10px">{point.key}</span><div style="color:{series.color}">',
+        pointFormat: '{point.y:.'+ndec+'f}',
+        footerFormat: '</div>',
+        shared: true,
+        useHTML: true,*/
+		xDateFormat: '%Y-%m-%d %H:%M:%S',
+        shared: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [{
+        name: "Average Speed in KPXH",
+        data: ask2p
+/*
+	}, {
+		name: "Bus",
+		data: bs2p,
+	
+	}, {
+		name: "Car",
+		data: c2p,
+
+	}, {
+		name: "Heavy",
+		data: h2p,
+
+	}, {
+		name: "Light",
+		data: l2p,
+	
+	}, {
+		name: "Motorcycle",
+		data: m2p,
+*/
+	}],
+
+	responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom',
+                	}
+            	}
+        	}]
+    		}
+});
+}
+
+
+/*
+function cplot3()
+{
+	console.log("cplot---1")
+
+	ndec=0;
+	Highcharts.chart('chart2', {
+    chart: {
+        type: 'column'
+    },
+	title:    { text: "" },
+    subtitle: { text: "Source: Flow from the Sky" },
+     xAxis: {
+        
+        title: {
+            text: 'Hora'
+        },
+        tooltip: {
+			xDateFormat: '%H:%M:%S',
+        	shared: true}
+    },
+    yAxis: {
+        title: {
+            text: "Consumo kWh" 
+        },
+        min: 0
+    },
+    tooltip: {
+		formatter: function() {
+                return '<b>'+ Highcharts.numberFormat(this.y, 0) +'</b><br/><br/>'+ 
+				this.x + 'h00';
+            },
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [{
+        name: "Total Consumo kWh",
+        data: h2c
+    }],
+
+responsive: {
+	rules: [{
+		condition: {
+			maxWidth: 500
+		},
+		chartOptions: {
+			legend: {
+				layout: 'horizontal',
+				align: 'center',
+				verticalAlign: 'bottom',
+				}
+			}
+		}]
+		}
+});
+}
+*/
+
+</script>
+</head>
+<body onload="loadses()"  style='font-family: montserrat; display: flex'>
+
+<!-- BEGINNING div id='n1-Principal' -->
+<div id="n1" style="width: 100%; height: 100%; position:relative">
+
+<!-- BEGINNING div id="n2-header" -->
+<div id="n2-header" style="position: relative;">
+<table width='100%' border=1 cellspacing="0" cellpadding="0" style="border:3px solid lime;border-radius:5px;font-family: montserrat; position: relative; ">
+<tr  style='font-weight: bold;color:whitesmoke;background-color: grey;opacity:.7;'> 
+<td style='width: 40%' align=center><input type="text" id="agora2" style='width:250px;text-align: center;' title='hora' readonly value="....">
+<td style='width: 18%' align=center cellpadding=5 cellspacing=3><font size=4>BaZe - D4MAIA 
+<td>
+<table id=tal width='100%'><tr><td>
+<td style='width:100%;' id=metalarm_old></table>
+</table>
+</div>
+<!-- END div id="n2-header" -->
+
+
+
+<table border=0 width='100%' style='border: 2px solid green; border-radius: 10px;'>
+<tR><td align=center>
+
+<h3>Chart Type</h3><br>
+
+  <input type="radio" id="linha" name="tipog" value="linha" onclick="gog()" checked>
+  <label for="tipog">Line</label><br>
+  <input type="radio" id="barras" name="tipog" value="barras" onclick="gog()">
+  <label for="tipog">Column</label><br>
+
+
+<hr>
+<select id=serie onselect="getdata()" onchange='getdata()'></select>
+
+
+<script>
+	function gog()
+	{
+		console.log('gog')
+		if (document.getElementById("linha").checked) {cplot()}
+			else {cplot2()}		
+	}
+</script>
+
+<td align=center>
+
+<div id=chart1 width='50%'  style='width:90%;border:1px dotted lime;min-height: 50%;min-width:500px;' valign=middle><br><br><br><br>
+			<img src='./pics/Spinner-1s-131px.gif'>
+			<br>[Loading...]<br></div><br>
+			<div id=lech>__</div>
+
+<!-- <div id=chart2 width='50%'  style='width:90%;border:1px dotted lime;min-height: 50%;min-width:500px;' valign=middle><br><br><br><br>
+			<img src='./pics/Spinner-1s-131px.gif'>
+			<br>[Loading...]<br></div><br>
+			<div id=lech>__</div> -->
+
+</table>
+</div>
+
+
+
+<!-- QRCode -->
+<div id=fundo class="footer" align="right">
+	<img src='http://baze.cm-maia.pt/BaZe/videowall/pics/BaZe2022.png' height="90%" ><br>
+	<a href='http://baze.cm-maia.pt/BaZe' title='BaZe official webpage'>+ info</a>
+</div>
+<!-- QRCode-->
+
+<script>
+var agorah;
+function set0()
+{ 
+   document.getElementById('agora2').value = Date().toString().substring(0,24);
+   agorah=setTimeout(function(){ set0(); },5000)
+}
+set0()
+
+</script>
+
+<script src=kvcall.js></script>
+
+<!-- END div id='n1-Principal' -->
+</div>
+
+</body>
+</html>

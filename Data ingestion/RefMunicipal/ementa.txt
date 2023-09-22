@@ -1,0 +1,52 @@
+a de
+Segunda-feira
+Sopa
+Normal
+Dieta
+Opção
+Sobremesa
+Terça-feira
+Sopa
+Normal
+Dieta
+Opção
+Sobremesa
+Quarta-feira
+Sopa
+Normal
+Dieta
+Opção
+Sobremesa
+Quinta-feira
+Sopa
+Normal
+Dieta
+Opção
+Sobremesa
+Sexta-feira
+Sopa
+Normal
+Dieta
+Opção
+Sobremesa
+Legumes
+Carne à Jardineira
+Peixe espada grelhado
+Fruta e ou Doce
+Nabiças
+Raia frita com arroz primavera
+Costeletas grelhadas
+Fruta e ou Doce
+Espinafres
+Frango à Passarinho
+Alas de pescada cozidas
+Fruta e ou Doce
+Penca
+Filetes de pescada com salada russa
+Bife de frango grelhado
+Fruta e ou Doce
+Legumes
+Feijoada à Lavrador
+Robalo grelhado
+Fruta e ou Doce
+05-Set 09-Set 2022

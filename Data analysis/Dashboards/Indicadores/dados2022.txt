@@ -1,0 +1,35 @@
+
+
+Indicadores={
+	titulo:"Indicadores e Objectivos",
+	ano:[2018, 2019, 2020, 2021],
+	nIndic:{nome:"Número de indicadores", valores:[199, 181, 175, 163]},
+	IAtingidos:{nome:"Indicadores Atingidos", valores:[159, 158, 147, 145]},
+	Objectivos:{nome:"Objectivos", valores:[114, 99, 100,94]},
+	OAtingidos:{nome:"Objectivos Atingidos", valores:[80, 82, 82, 83]},
+
+	texto:"Texto explicativo Texto explicativo Texto explicativo Texto explicativo Texto explicativo Texto explicativo Texto explicativo Texto explicativo Texto explicativo Texto explicativo Texto explicativo Texto explicativo Texto explicativo "
+}
+
+
+
+azoes={
+		ano:[
+		{id:2017, origem:{
+				audits   :{emcurso:71, ematraso:5, encerradas:34, naoeficazes:5},
+				revGestao:{emcurso:25, ematraso:1, encerradas: 9, naoeficazes:3},
+				corrCorr :{emcurso: 6, ematraso:0, encerradas: 8, naoeficazes:5},
+				planCorr :{emcurso:38, ematraso:1, encerradas: 7, naoeficazes:0},
+
+				}},
+		{id:2018, origem:{
+				audits   :{emcurso:19, ematraso:5, encerradas:33, naoeficazes:0},
+				revGestao:{emcurso:26, ematraso:1, encerradas:20, naoeficazes:4},
+				corrCorr :{emcurso: 1, ematraso:1, encerradas:12, naoeficazes:0},
+				}}
+		]
+		
+		
+}
+
+

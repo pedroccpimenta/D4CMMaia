@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+
+<title>Indicadores 2022</title>
+<LINK REL="SHORTCUT ICON" HREF="../pics/BaZe.png">	
+
+<!--
+<script src='../../../../2020/MAIA - Camara/Highcharts-8.2.2/code/highcharts.js'></script>
+-->
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<script src='dados2022.txt' type="text/javascript"></script>
+
+
+ <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Accordion - Collapse content</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#accordion" ).accordion({
+      collapsible: true
+    });
+  } );
+  </script>
+
+
+<script type="text/javascript"> 
+
+
+document.cookie = "SameSite=None";
+//Set-Cookie: promo_shown=1; Max-Age=2600000; Secure
+//document.cookie="username=John Doe; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+
+function sec(a,b)
+{		// alert(a+'-'+b);
+		h2=document.getElementById(a+'mais');
+		h4=document.getElementById(a+'menos');
+		h3=document.getElementById(a);
+				
+		if (b=='mais')
+		{	//alert(b);
+			h4.style.display='';
+			h2.style.display='none';
+			h3.style.display='';
+
+			switch(a)
+			{	case "IND01":
+					console.log("IND01")
+					setTimeout(function(){prepa01("Indicadores-At")}, 100)
+					break;
+				case "IND02":
+					console.log("IND02")
+					setTimeout(function(){plota(series02, "chart2")}, 100)
+					break;
+										
+			}
+		}
+		else
+		{	h4.style.display='none';
+			h2.style.display='';
+			h3.style.display='none';
+		}
+}
+	
+function loaded()
+{	
+	eles=window.location.href.split("/")
+	eles=eles[5].split(".")
+	document.title=eles[0].substr(0,1).toUpperCase()+eles[0].substr(1,4).toLowerCase()+ " "+eles[0].substr(5,4)
+
+	console.log("loaded!")
+
+}
+
+</script>
+
+
+</head>
+<body bgcolor='whitesmoke' style='font-family:lato'  onload='loaded()'><center>
+
+<table width=90% bgcolor=aquamarine border=0 cellspacing=0 style='border: 2px solid limegreen; padding-left: 5px;
+	-webkit-border-radius: 8px;	-moz-border-radius: 8px;
+    border-radius: 8px;' width='100%'>
+<tr><td valign=bottom width='27%'><font size=6 color=green><b>Indicadores 2022</b></font>
+
+</td>
+<td >	<td valign=top align=right width='27%'>
+<form method=GET action='http://www.google.com/search' target='pr' style='margin-bottom:0px;'>
+<INPUT type=text name=q size=20  value='pesquisa google'>&nbsp;<INPUT type=submit name=sa VALUE='Go!'>
+</form>
+	<select title='fonte' id=kj onChange="g=document.getElementsByTagName('body');g[0].style.fontFamily=this.selectedOptions[0].value;">
+   			<option value=lato>Lato</option>
+   			<option value=verdana>Verdana</option>				
+   			<option value=Courier>Courier</option>				
+   			<option value=Montserrat>Montserrat</option>				
+   			<option value=Arial>Arial</option>				
+   			<option value=Helvetica>Helvetica</option>		
+   			<option value='Lucida console'>Lucida console</option>				
+   			<option value='Palatino linotype'>Palatino linotype</option>				
+   			<option value='Times'>Times</option>				
+   			<option value='Oxygen'>Oxygen</option>				
+   			<option value='Times new roman'>Times new roman</option>		
+   			<option value='Georgia'>Georgia</option>				
+   		</select>	
+
+</td>
+</tr>
+</table>
+<hr color=orange>
+
+<table width=90%>
+	<tr>
+	<td valign='top' bgcolor='white' width='50%'>      
+
+		<table bgcolor=white width='100%' style='border: 2px solid green;background:white; padding-left: 5px; border-radius: 8px;'><tr><td align=left> 	
+			<div id='el01mais' style='display:;'>
+			<img src='../pics/magnifier_zoom_in.png' onclick="javascript:sec('el01', 'mais');"></div>
+			<div id='el01menos' style='display:none;'>
+			<img src='../pics/magnifier_zoom_out.png' onclick="javascript:sec('el01', 'menos');"></div>
+			<td width='100%'>	Grupo 1	- Descrição deste Grupo de Páginas
+			<tr id='el01' style='display:none;'><td colspan=2>
+
+			<table border=1 width='100%'>
+			<TR><TD><div id='IND01mais' style='display:;'>
+			<img src='../pics/magnifier_zoom_in.png' onclick="javascript:sec('IND01', 'mais');"></div>
+			<div id='IND01menos' style='display:none;'>
+			<img src='../pics/magnifier_zoom_out.png' onclick="javascript:sec('IND01', 'menos');"></div>
+			<td width='100%'>Página 1 - Indicadores
+			<tr id='IND01' style='display:none;'><td colspan=2>
+
+					<table border=1>
+						<tr><td>
+							<table border=0>
+								<tr><td><input type="button" value="Número / Atingidos" style="width:200px;" onclick="prepa01('Indicadores-At')">	
+								<tr><td><input type="button" value="Número / Não-atingidos"  style="width:200px;"  onclick="prepa01('Indicadores-Nat')">					
+								<tr><td><input type="button" value="Percentagem / Atingidos"  style="width:200px;"  onclick="prepa01('Indicadores-Perc-At')">	
+								<tr><td><input type="button" value="Percentagem / Não-atingidos"  style="width:200px;"  onclick="prepa01('Indicadores-Perc-Nat')">
+								<hr>	
+								<tr><td><input type="button" value="Indicadores / atingidos e não atingidos"  style="width:200px;"  onclick="prepa01('Indicadores-At-Nat')">	
+								<tr><td><input type="button" value="Objectivos / atingidos e não atingidos"  style="width:200px;"  onclick="prepa01('Objectivos-At-Nat')">	
+							</table>
+
+							<td>
+					<div id=chart1 style='width:90%'>Gráfico(s)</div>
+					Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo
+						
+					</table>
+
+			<TR><TD><div id='IND02mais' style='display:;'>
+			<img src='../pics/magnifier_zoom_in.png' onclick="javascript:sec('IND02', 'mais');"></div>
+			<div id='IND02menos' style='display:none;'>
+			<img src='../pics/magnifier_zoom_out.png' onclick="javascript:sec('IND02', 'menos');"></div>
+			<td width='100%'>Indicador 2 - Título do Indicador 2
+			<tr id='IND02' style='display:none;'><td colspan=2>
+					<div id=chart2 style='width:90%'>Gráfico(s)</div>
+					Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo	Texto explicativo
+					
+
+
+
+			</table>
+		</table>
+
+<tr>
+	<td valign='top' bgcolor='white' width='50%'>      
+
+		<table bgcolor=white width='100%' style='border: 2px solid green;background:white; padding-left: 5px; border-radius: 8px;'><tr><td align=left> 	
+			<div id='el02mais' style='display:;'>
+			<img src='../pics/magnifier_zoom_in.png' onclick="javascript:sec('el02', 'mais');"></div>
+			<div id='el02menos' style='display:none;'>
+			<img src='../pics/magnifier_zoom_out.png' onclick="javascript:sec('el02', 'menos');"></div>
+			<td width='100%'>	Grupo 2 - Descrição deste Grupo de Indicadores
+			<tr id='el02' style='display:none;'><td colspan=2>
+			<table border=1 width='100%'><tr><td>
+
+
+			</table>
+		</table>
+
+</table>
+<hr color=green>
+
+<!--
+<div id="accordion">
+  <h3>Section 1</h3>
+  <div>
+    <p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p>
+  </div>
+  <h3>Section 2</h3>
+  <div>
+    <p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna. </p>
+  </div>
+  <h3>Section 3</h3>
+  <div>
+    <p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui. </p>
+    <ul>
+      <li>List item one</li>
+      <li>List item two</li>
+      <li>List item three</li>
+    </ul>
+  </div>
+  <h3>Section 4</h3>
+  <div>
+    <p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia mauris vel est. </p><p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. </p>
+  </div>
+</div> -->
+ <script>
+
+//dados={""}
+
+
+
+colors = ['red', 'orange','green', 'lime'];
+
+nat=[]
+rat=[]
+function prepa01(x)
+{	cates=Indicadores.ano;
+	switch(x)
+	{	
+		case "Indicadores-At":
+			colors = ['red', 'orange','green', 'lime'];
+			ytitle=Indicadores.titulo;
+				
+			series01=[
+				{name:Indicadores.nIndic.nome,     data:Indicadores.nIndic.valores    , marker:{ symbol:"square"}},
+				{name:Indicadores.Objectivos.nome, data:Indicadores.Objectivos.valores, marker:{ symbol:"square"}},
+				{name:Indicadores.IAtingidos.nome, data:Indicadores.IAtingidos.valores, marker:{ symbol:"square"}},
+				{name:Indicadores.OAtingidos.nome, data:Indicadores.OAtingidos.valores, marker:{ symbol:"square"}},
+				] 
+			plota(series01, "chart1")   
+			break;
+
+
+		case "Indicadores-Nat":
+			colors = ['red', 'orange','grey', 'silver'];
+			ytitle=Indicadores.titulo;
+				nat={nome:"Indicadores não Atingidos", valores:[]};
+				rat={nome:"Objectivos não Atingidos", valores:[]};
+				for (i in Indicadores.nIndic.valores)
+				{	nat.valores[i]=Indicadores.nIndic.valores[i]-Indicadores.IAtingidos.valores[i]
+					rat.valores[i]=Indicadores.Objectivos.valores[i]-Indicadores.OAtingidos.valores[i]	
+				}	
+
+			series011=[
+				{name:Indicadores.nIndic.nome,     data:Indicadores.nIndic.valores    , marker:{ symbol:"square"}},
+				{name:Indicadores.Objectivos.nome, data:Indicadores.Objectivos.valores, marker:{ symbol:"square"}},
+				{name: nat.nome, 				   data:nat.valores, marker:{ symbol:"circle"}, dashStyle:"dash"},
+				{name: rat.nome,                   data:rat.valores, marker:{ symbol:"circle"}, dashStyle:"dash"},
+				] 
+			plota(series011, "chart1")   
+			break;
+		case "Indicadores-Perc-At":
+			colors = ['red', 'orange','green', 'lime'];
+				natp={nome:"Indicadores Atingidos", valores:[]};
+				ratp={nome:"Objectivos Atingidos", valores:[]};
+				for (i in Indicadores.nIndic.valores)
+				{	natp.valores[i]=eval(((Indicadores.IAtingidos.valores[i])/ Indicadores.nIndic.valores[i]*100).toFixed(0));
+					ratp.valores[i]=eval(((Indicadores.OAtingidos.valores[i]) / Indicadores.Objectivos.valores[i]*100).toFixed(0));	
+				}	
+			ytitle=Indicadores.titulo;
+				
+			series01y2= [ 
+						{  yAxis:0, type: 'spline',   name: 'Indicadores',   data: Indicadores.nIndic.valores },
+						{  yAxis:0, type: 'spline',   name: 'Objectivos',    data: Indicadores.Objectivos.valores },
+						{  yAxis:1, type: 'column', name: '% Ind. atingidos', data: natp.valores}, 
+						{  yAxis:1, type: 'column', name: '% Obj. atingidos', data: ratp.valores}
+						] 
+			plota2y(series01y2, "chart1")   
+			break;
+		case "Indicadores-Perc-Nat":
+			colors = ['red', 'orange','grey', 'silver'];
+				nnatp={nome:"Indicadores não Atingidos", valores:[]};
+				nratp={nome:"Objectivos não Atingidos", valores:[]};
+				for (i in Indicadores.nIndic.valores)
+				{	nnatp.valores[i]=eval(((Indicadores.nIndic.valores[i]-Indicadores.IAtingidos.valores[i])/ Indicadores.nIndic.valores[i]*100).toFixed(0));
+					nratp.valores[i]=eval(((Indicadores.Objectivos.valores[i]-Indicadores.OAtingidos.valores[i]) / Indicadores.Objectivos.valores[i]*100).toFixed(0));	
+				}	
+			ytitle=Indicadores.titulo;
+				
+			series01y2= [ 
+						{  yAxis:0, type: 'spline',   name: 'Indicadores',   data: Indicadores.nIndic.valores },
+						{  yAxis:0, type: 'spline',   name: 'Objectivos',    data: Indicadores.Objectivos.valores },
+						{  yAxis:1, type: 'column', name: '% Ind. não atingidos', data: nnatp.valores}, 
+						{  yAxis:1, type: 'column', name: '% Obj. não atingidos', data: nratp.valores}
+						] 
+			plota2y(series01y2, "chart1")   
+			break;
+		case "Indicadores-At-Nat":
+			colors = ['red', 'green', 'grey'];
+				natp={nome:"Indicadores Atingidos", valores:[]};
+				nnatp={nome:"Indicadores não Atingidos", valores:[]};
+				nratp={nome:"Objectivos não Atingidos", valores:[]};
+				for (i in Indicadores.nIndic.valores)
+				{	natp.valores[i]=eval(((Indicadores.IAtingidos.valores[i])/ Indicadores.nIndic.valores[i]*100).toFixed(0));
+					nnatp.valores[i]=eval(((Indicadores.nIndic.valores[i]-Indicadores.IAtingidos.valores[i])/ Indicadores.nIndic.valores[i]*100).toFixed(0));
+					nratp.valores[i]=eval(((Indicadores.Objectivos.valores[i]-Indicadores.OAtingidos.valores[i]) / Indicadores.Objectivos.valores[i]*100).toFixed(0));	
+				}	
+			ytitle=Indicadores.titulo;
+				
+			series01y2= [ 
+						{  yAxis:0, type: 'spline',   name: 'Indicadores',   data: Indicadores.nIndic.valores },
+						{  yAxis:1, type: 'column', name: '% Ind. atingidos', data: natp.valores}, 
+						{  yAxis:1, type: 'column', name: '% Ind. não atingidos', data: nnatp.valores}
+						] 
+			plota2y(series01y2, "chart1")   
+			break;
+		case "Objectivos-At-Nat":
+			colors = ['orange', 'lime', 'silver'];
+				natp={nome:"Indicadores Atingidos", valores:[]};
+				ratp={nome:"Objectivos Atingidos", valores:[]};
+
+				nnatp={nome:"Indicadores não Atingidos", valores:[]};
+				nratp={nome:"Objectivos não Atingidos", valores:[]};
+				for (i in Indicadores.nIndic.valores)
+				{	natp.valores[i]=eval(((Indicadores.IAtingidos.valores[i])/ Indicadores.nIndic.valores[i]*100).toFixed(0));
+					ratp.valores[i]=eval(((Indicadores.OAtingidos.valores[i]) / Indicadores.Objectivos.valores[i]*100).toFixed(0));	
+					nnatp.valores[i]=eval(((Indicadores.nIndic.valores[i]-Indicadores.IAtingidos.valores[i])/ Indicadores.nIndic.valores[i]*100).toFixed(0));
+					nratp.valores[i]=eval(((Indicadores.Objectivos.valores[i]-Indicadores.OAtingidos.valores[i]) / Indicadores.Objectivos.valores[i]*100).toFixed(0));	
+				}	
+			ytitle=Indicadores.titulo;
+				
+			series01y2= [ 
+						{  yAxis:0, type: 'spline',   name: 'Objectivos',   data: Indicadores.Objectivos.valores },
+						{  yAxis:1, type: 'column', name: '% Obj. atingidos', data: ratp.valores}, 
+						{  yAxis:1, type: 'column', name: '% Obj. não atingidos', data: nratp.valores}
+						] 
+			plota2y(series01y2, "chart1")   
+			break;
+
+	}
+}
+
+
+function plota(series, ph)
+{
+
+	Highcharts.chart(ph, {
+	//Highcharts.chart('container', {
+		style:{"font-family":"montserrat",
+			"fontfamily":"montserrat"}	,
+		colors: colors,
+	    title: {
+	        text: ytitle
+	    },
+
+	/*    subtitle: {
+	        text: 'Source: thesolarfoundation.com'
+	    }, */
+
+	    yAxis: {
+	        title: {
+	            text: ytitle
+	        },
+	        min:0,
+	        max:250
+	    },
+
+	    xAxis: {
+
+	    	categories:cates
+	        /*accessibility: {
+	            rangeDescription: 'Range: 2010 to 2017'
+	        }*/
+	     //   type:'datetime'
+	    },
+
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	        ///verticalAlign: 'middle',
+	        verticalAlign: 'top',
+	        //enabled: true,
+	            floating: true,
+	         //   verticalAlign: 'bottom',
+	        //    align:'center',
+	    },
+
+	    plotOptions: {
+	        series: {
+	            label: {
+	                connectorAllowed: true
+	            },
+	            pointStart: Indicadores.ano[0]
+	        }
+	    },
+
+	    series: series,
+
+	    responsive: {
+	        rules: [{
+	            condition: {
+	                maxWidth: 500
+	            },
+	            chartOptions: {
+	                legend: {
+	                    layout: 'horizontal',
+	                    align: 'center',
+	                    verticalAlign: 'bottom'
+	                }
+	            }
+	        }]
+	    }  
+	});
+}
+
+
+function plota2y(series, ph)
+{
+
+	Highcharts.chart(ph, {
+	//Highcharts.chart('container', {
+		//style:{font-family:"montserrat"}	,
+		colors: colors,
+	    title: {
+	        text: ytitle
+	    },
+
+	/*    subtitle: {
+	        text: 'Source: thesolarfoundation.com'
+	    }, */
+yAxis: [{ //--- Primary yAxis
+    title: {
+        text: 'Nº de Indicadores / Objectivos'
+    },
+    min:0,
+    max:250
+}, { //--- Secondary yAxis
+    title: {
+        text: '% de atingidos'
+    },
+    opposite: true,
+    max:100
+}],
+
+	    xAxis: {
+	    	categories:cates
+	        /*accessibility: {
+	            rangeDescription: 'Range: 2010 to 2017'
+	        }*/
+	     //   type:'datetime'
+	    },
+
+	    legend: {
+	        layout: 'vertical',
+	        align: 'right',
+	        verticalAlign: 'middle'
+	    },
+
+	    plotOptions: {
+	        series: {
+	            label: {
+	                connectorAllowed: true
+	            },
+	            pointStart: Indicadores.ano[0]
+	        }
+	    },
+
+	    series:series,
+
+	    responsive: {
+	        rules: [{
+	            condition: {
+	                maxWidth: 500
+	            },
+	            chartOptions: {
+	                legend: {
+	                    layout: 'horizontal',
+	                    align: 'center',
+	                    verticalAlign: 'bottom'
+	                }
+	            }
+	        }]
+	    }  
+	});
+
+}
+
+
+</script>
+
+</body>

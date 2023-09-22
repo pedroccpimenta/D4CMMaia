@@ -177,7 +177,6 @@ else:
         #port=587 # TLS
         port=465 # SSL
 
-        #password="etnitjozlptdtged"
         # Create a secure SSL context
         context = ssl.create_default_context()
 

@@ -8,6 +8,8 @@ from mysql.connector import Error
 #import colorama
 import time
 
+import configdb
+
 mtn={"janeiro":"01", "fevereiro":"02", "março":"03", "abril":"04", "maio":"05", "junho":"06", "julho":"07",\
 "agosto":"08", "setembro":"09", "outubro":"10", "novembro":"11", "dezembro":"12"}
 
@@ -24,8 +26,8 @@ try:
     print(ssh_tunnel.local_bind_address) 
 
     connection = mysql.connector.connect(
-        user="ppimenta",
-        password="pim53enta",
+        user=configdb.dbUserName,
+        password=configdb.dbUPass,
         host="127.0.0.1",
         port = ssh_tunnel.local_bind_port,
         database="BAZE"

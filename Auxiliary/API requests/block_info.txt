@@ -1,0 +1,1 @@
+{"Api_Version":"1.14","api_version":"1.14","block_host_device_type":"embedded_micro","block_specialization":"traffic","block_version":"1.14.0"}

@@ -1,0 +1,2 @@
+dbUserName="UserName"
+dbUPass="**password**"

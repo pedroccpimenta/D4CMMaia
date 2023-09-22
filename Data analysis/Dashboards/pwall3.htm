@@ -3,6 +3,10 @@
 <meta charset="utf-8"/>
 <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=yes"/>
+<script>tstart=new Date();</script> 
+<!-- WEB -->
+<!--   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,9 +15,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
  <LINK REL="SHORTCUT ICON" HREF="http://baze.cm-maia.pt/BaZe/videowall/pics/micon.png" type="image/x-icon">
 
-<head>
-<head>
+<script>
+$.ajaxSetup({async:false});
+</script>
 
+
+<head>
 
 <style>
 #osmap2 {
@@ -22,10 +29,6 @@
       display: inline-block;
     }
 </style>
-
-<!-- WEB -->
-<!--   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <!-- Open Street maps  -->
 
@@ -406,9 +409,8 @@ function loadem(x)
       	if (x=="estacionamento tp")
       		markdata(r2, map2)
 
-
 		if (x=="estacionamento 5dp")
-      		markdata(r2, map2)
+      		setTimeout(function(){markdata(r2, map2)}, 1000)
       	
       	setTimeout(ratset, 1000)
 
@@ -597,6 +599,9 @@ function contset(modo)
 		if (l2b>1100) zoom=17	
 	}
 
+	if (l2b>1500) zoom=18
+
+
 	console.log("++++ INIT MAP ++++ ZOOM:"+zoom)
   map2 = L.map('osmap2', { zoomControl: false }).setView([41.234, -8.6238], zoom); //Zoom 20 - focado na cobertura verde
  
@@ -770,7 +775,9 @@ if (typeof(r2)!="undefined"	)
 					<td align=center style='width: 30px;height: 30px;border-radius: 16px;background-color: #A1D243;color:white;font-size:7px;font-weight: 555;border: 0px;'>NO			
 </table>
 <p id=p1 style='margin: 0;'>&nbsp;</p>
-<marquee id=IET scrolldelay=53 bgcolor=silver margin="0">Período experimental de processamento de dados reais.</marquee>
+<!-- <marquee id=IET scrolldelay=53 bgcolor=silver margin="0">Período experimental de processamento de dados reais.</marquee>  -->
+<br>
+
 <p id=p2 style='margin:0'>&nbsp;</p>
 
 
@@ -781,7 +788,7 @@ if (typeof(r2)!="undefined"	)
 	<tr><td align=center>livre<td align=center>ocupado<td align=center>não definido
 </table>
 
-
+<br>
 <div id=chart1 width='90%' height='30%' style='width:80%;border:1px dotted lime;min-height: 30%;display:none;' valign=middle><br>[Espaço para um gráfico]<br><br></div>
 
 </div>
@@ -947,6 +954,8 @@ function markdata(o, mappa)
                               }
                               dimi=32
            		              dimi=12
+           		              dimi=16
+
 
                               dIcon=L.icon({ iconUrl: iconurl, iconSize: [dimi, dimi], iconAnchor: [dimi/2, dimi], popupAnchor: [0, -28/32*dimi] })
 //                                console.log("ICON FROM properties")
@@ -1061,4 +1070,6 @@ referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 
 
 </body>
+<script src=kvcall.js></script>
+
 </html>

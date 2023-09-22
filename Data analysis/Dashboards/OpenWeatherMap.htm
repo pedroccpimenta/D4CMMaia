@@ -1,0 +1,682 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>API OpenWeather</title>
+<LINK REL="SHORTCUT ICON" HREF="./pics/minilogobaze.png" type="image/x-icon">
+<script>tstart=new Date();</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<!-- Open Street maps  -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+<style> 
+
+  html, body {
+      height: 100%;
+      margin: 0;
+    }
+    
+
+.highcharts-figure,
+.highcharts-data-table table {
+    /* min-width: 360px;
+    max-width: 800px; */
+    width:100%;
+    height: 90%;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 700px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+
+.myButton {
+	background-color:#7892c2;
+	border-radius:28px;
+	border:1px solid #4e6096;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:16px;
+	padding:11px 20px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #283966;
+}
+.myButton:hover {
+	background-color:#476e9e;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+.div-left{
+    float:left;
+    padding-left: 10px;
+    padding-right: 10px;
+   	width: 48%;
+   	min-height: 50%;
+    min-width:720px;
+    position: relative;
+}
+
+.div-right{
+    float:left;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 48%;
+    min-width:720px;
+    position: relative; 
+}
+
+
+@media (orientation: landscape) {
+  body {
+    flex-direction: row;
+  }
+}
+
+@media (orientation: portrait) {
+  body {
+    flex-direction: column;
+  }
+}
+
+.mapStyle {
+      width: 100%;
+      height: 55%;      
+}
+
+
+
+.footer {
+   position: fixed; 
+   color: white;
+   text-align: center;
+   width:9%;
+   height:9%;
+   bottom: 15px;
+   right: 15px;
+   border:1px solid white;
+   text-align: center;
+}
+
+</style>
+
+<script>
+
+$.ajaxSetup({
+    async: false
+})
+
+	var hy="_"
+	var ars="_"
+	function loadses()
+	{ 	
+
+queryString = window.location.search;
+//console.log("queryString:", queryString)
+es=queryString.split("?")
+es = new URLSearchParams(window.location.search)
+
+e0 = es.get('e0')
+//console.log("e0:", e0)
+//console.log("typeof(e0):", typeof(e0))
+if (e0 == 	null) 
+	{ e0="Anta" }
+//console.log("================e0:",e0)
+	toss=0;
+
+		lh=document.getElementById("serie");
+		url="http://10.10.10.32/D4CMMaia/Openweather4sql.php";
+
+		$.getJSON(url, function(r){
+		ars=r;
+		for (j in r['features'][0].local)
+ 		{	//console.log("+++++++++++++++++++++++++",j)
+ 			if (j==0) continue;
+
+ 			nopi = document.createElement("option")
+ 			nopi.value = r['features'][0].local[j]
+ 			nopi.text = r['features'][0].local[j]
+ 			nopi.title = r['features'][0].local[j]
+ 			
+ 			if (e0.toLowerCase()==r['features'][0].local[j]) 
+ 			{
+ 				toss=j-1;
+
+ 			}
+
+ 			lh.appendChild(nopi)
+ 		}
+
+ 		//console.log("toss:", toss)
+
+ 		lh.selectedIndex=toss;
+
+		
+		setTimeout(function (){ document.getElementById("serie").size=Math.min(15, ars['features'][0].local.length)}, 1000);
+
+		})		
+		setTimeout(getdata, 1200);
+}
+
+
+	rs=[]
+	
+	sor=0;
+	NomeSerie=""
+	function getdata()
+	{	sor=document.getElementById("serie");
+		
+		if (sor.selectedIndex==-1) 
+			{	
+				sor.selectedIndex="0";
+				//sor.setAttribute("selectedIndex",0)
+			}
+		console.log("indice:",sor.selectedIndex)
+
+		if (sor.selectedIndex==-1) url="http://10.10.10.32/D4CMMaia/Openweather4sql.php?ponto=Anta";
+		else url="http://10.10.10.32/D4CMMaia/Openweather4sql.php?ponto="+sor.options[sor.selectedIndex].value;
+  
+		$.getJSON(url, function(r){
+		rs=JSON.parse(JSON.stringify(r))
+		console.log(rs)
+		rs=r
+
+		// Local
+		local = sor.options[sor.selectedIndex].value
+
+		// Data
+		t=rs.features[0].properties.data
+
+		// Temperatura
+		v=rs.features[0].properties.Temp
+
+		// Pressao
+		pressao=rs.features[0].properties.Pressao
+
+		// Humidade
+		humidade=rs.features[0].properties.Humidade
+
+		// Nebulosidade
+		nebulosidade=rs.features[0].properties.Nebulosidade
+
+		// Vento
+		vento=rs.features[0].properties.Vento
+
+		// Ventodir
+		ventodir=rs.features[0].properties.Ventodir
+
+		// Visibilidade
+		vis=rs.features[0].properties.Vis
+
+		// criar um array para alterrar o formato das datas
+		tt = []
+		
+		for (i in t)
+		{
+			// Alterar a Data para EPOCH UNIX -> O ICharts só lê EPOCH
+
+			const date = new Date(t[i]);
+			const timestampInMs = date.getTime();
+			const unixTimestamp = Math.floor(date.getTime());
+			tt[i] = unixTimestamp
+		}
+
+		
+		/* Ex.
+		const dateStr = '2022-06-22';
+		const date = new Date(dateStr);
+		console.log(date); // 👉️ Wed Jun 22 2022
+
+		const timestampInMs = date.getTime();
+
+		const unixTimestamp = Math.floor(date.getTime() / 1000);
+		console.log(unixTimestamp); // 👉️ 1655856000
+		*/
+
+		s2p =[]
+		for (i in t) s2p.push([tt[i], v[i]]) // juntar os arrays de Temp e Data no s2p
+
+		pres2d =[]
+		for (i in t) pres2d.push([tt[i], pressao[i]]) // juntar os arrays de Pressao e Data no pres2d
+
+		hum2d =[]
+		for (i in t) hum2d.push([tt[i], humidade[i]]) // juntar os arrays de Humidade e Data no hum2d
+
+		neb2d =[]
+		for (i in t) neb2d.push([tt[i], nebulosidade[i]]) // juntar os arrays de Nebulosidade e Data no neb2d
+
+		vent2d =[]
+		for (i in t) vent2d.push([tt[i], vento[i]]) // juntar os arrays de vento e Data no vent2d
+
+		vdir2d =[]
+		for (i in t) vdir2d.push([tt[i], ventodir[i]]) // juntar os arrays de ventodir e Data no vdir2d
+
+		vis2d =[]
+		for (i in t) vis2d.push([tt[i], vis[i]]) // juntar os arrays de Visibilidade e Data no vis2d
+
+
+		// Default -> Mostra a Temperatura
+		seeeeris = s2p
+		tipo = 'Temperatura (ºC)'
+
+		document.getElementById("temp").onclick = function() {alterarSerie(s2p)};
+		document.getElementById("pressao").onclick = function() {alterarSerie(pres2d)};
+		document.getElementById("humidade").onclick = function() {alterarSerie(hum2d)};
+		document.getElementById("nebulosidade").onclick = function() {alterarSerie(neb2d)};
+		document.getElementById("vento").onclick = function() {alterarSerie(vent2d)};
+		document.getElementById("ventodir").onclick = function() {alterarSerie(vdir2d)};
+		document.getElementById("vis").onclick = function() {alterarSerie(vis2d)};
+			
+		lechh=document.getElementById("lech")
+		lechh.innerHTML="Fonte: "+rs.features[0].properties.popupContent
+
+		if (t[t.length - 1] != "")
+		 lechh.innerHTML += " (ultima actualizacao: "+ t[0] +")"; // vai buscar o index do 1 elemento
+		
+		if (rs.features[0].properties.popupContent!="")
+		{
+
+		lechh.innerHTML+="<br>Mais info: "
+		NomeSerie=rs.features[0].properties.popupContent
+		aTag = document.createElement('a');
+		aTag.innerHTML=local
+		aTag.href='https://www.google.com/search?q=' + local + ' Maia'
+		aTag.target="MJU"
+		lech.appendChild(aTag)			
+		}
+
+		lechh.innerHTML+="<hr color=lime>Ultima actualizacao no datalake BaZe: "+t[0]
+		lechh.innerHTML+="<br>Ultima tentativa de obter dados mais recentes: "+t[0]
+		})
+
+		mapp()
+		
+		setTimeout(function(){gog()}, 500)
+		
+}
+
+
+function alterarSerie(seriefull){
+
+	seeeeris = seriefull
+
+	if(seriefull == s2p) {tipo = 'Temperatura (ºC)'}
+	if(seriefull == pres2d) {tipo = 'Pessão Atmosferica (hPa)'}
+	if(seriefull == hum2d) {tipo = 'Humidade (%)'}
+	if(seriefull == neb2d) {tipo = 'Nebulosidade'}
+	if(seriefull == vent2d) {tipo = 'Velociade do Vento (m/s)'}
+	if(seriefull == vdir2d) {tipo = 'Direção do Vento (Graus º)'}
+	if(seriefull == vis2d) {tipo = 'Visibilidade (m)'}
+
+	gog()
+};
+
+
+// função MAPA -> Criar o mapa
+
+function mapp(){
+
+// Config mapa
+let config = {
+  minZoom: 2,
+  maxZoom: 18,
+};
+// Zoom do mapa inicial
+const zoom = 11.8;
+
+// coordenadas fixas onde o mapa estará centrado
+const lat = 41.23326709794755;
+const lng = -8.62225831003901;
+
+// Substituição da div 'weathermap' pela 'map'
+// Este passo é obrigatorio, pois o L.map exige estar criada a div antes de chamar o mapa
+document.getElementById('weathermap').innerHTML = "<div id='map' class='mapStyle'></div>";
+
+// calling map
+const map = L.map("map", config).setView([lat, lng], zoom);
+
+// Used to load and display tile layers on the map
+// Most tile servers require attribution, which you can set under `Layer`
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution:
+    '&copy; <a href="http://baze.cm-maia.pt/BaZe" target="pcp">BaZe 2022</a>',
+}).addTo(map);
+
+// Criar layer com os Limites do Concelho
+// Invocar o GeoJSON dos Limites do Concelho
+const LimiteConcelho = 'http://baze.cm-maia.pt/BaZe/api/api4gj.php?nome=LimiteConcelho'
+
+fetch(LimiteConcelho)
+  .then(function (response) {
+    return response.json();
+  })
+  .then(function (data) {
+    // use geoJSON
+    L.geoJSON(data, {
+      onEachFeature: onEachFeature,
+    }).addTo(map);
+  });
+
+// Tag do pin
+function onEachFeature(feature, layer) {
+  layer.bindPopup(ponto);
+}
+
+// Criar layer com as coordenadas do Ponto
+// Invocar o GeoJSON do Ponto
+
+const ponto = local
+var url = 'http://10.10.10.32/D4CMMaia/Openweather4sql.php?ponto='+ponto
+
+fetch(url)
+  .then(function (response) {
+    return response.json();
+  })
+  .then(function (data) {
+    // use geoJSON
+    L.geoJSON(data, {
+      onEachFeature: onEachFeature,
+    }).addTo(map);
+  });
+}
+
+function cplot()
+	{	console.log("cplot---")
+	
+		Highcharts.chart('chart1', {
+
+		chart: {
+        type: 'spline'
+        //,inverted: true
+    	},
+    title:    {  text: local },
+    subtitle: {    text:  "Fonte: OpenWeather" },
+       xAxis: {
+        	type: 'datetime',
+        	dateTimeLabelFormats: { // don't display the dummy year
+            	month: '%e.%b',
+            	year: '%b'
+        	},
+        	title: {
+            	text: 'Data / Hora'
+        	}
+    	},
+    	yAxis: {
+        	title: {
+            	text: tipo
+        	},
+        	min: 0
+    	},
+     	tooltip: {
+        	xDateFormat: '%Y-%m-%d %H:%M:%S',
+        	shared: true
+        },
+     plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            }
+        }
+    },
+
+    series: [{
+        name: rs.features[0].properties.popupContent,
+        data: seeeeris
+    }],
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                	}
+            	}
+        	}]
+    		}
+});
+}
+
+function cplot2()
+{
+ndec=0;
+
+Highcharts.chart('chart1', {
+    chart: {
+        type: 'column'
+    },
+    title:    {  text: local },
+    subtitle: {    text:  "Fonte: OpenWeather" },
+     xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: { // don't display the dummy year
+            month: '%e.%b',
+            year: '%b'
+        },
+        title: {
+            text: 'Data / Hora'
+        },
+        tooltip: {
+        xDateFormat: '%Y-%m-%d %H:%M:%S',
+        shared: true}
+    },
+    yAxis: {
+        title: {
+            text: tipo
+        },
+        min: 0
+    },
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><div style="color:{series.color}">',
+        pointFormat: '{point.y:.'+ndec+'f}',
+        footerFormat: '</div>',
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [{
+        name: "Fonte: "+rs.features[0].properties.popupContent +" ",
+        data: seeeeris
+    }]
+});
+}
+
+
+/*
+ // Initialize the map
+    const map = L.map('q')
+  
+    // Get the tile layer from OpenStreetMaps
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  
+    // Specify the maximum zoom of the map
+    maxZoom: 19,
+  
+    // Set the attribution for OpenStreetMaps
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+  
+    // Set the view of the map
+    // with the latitude, longitude and the zoom value
+    map.setView([48.8584, 2.2945], 16);
+      
+    // Set the map view to the user's location
+    // Uncomment below to set map according to user location
+    // map.locate({setView: true, maxZoom: 16});
+  
+    // Show a market at the position of the Eiffel Tower
+    let eiffelMarker = L.marker([48.8584, 2.2945]).addTo(map);
+  
+    // Bind popup to the marker with a popup
+    eiffelMarker.bindPopup("Eiffel Tower").openPopup();*/
+
+
+
+</script>
+</head>
+<body onload="loadses()"  style='font-family: montserrat; display: flex'>
+
+<!-- INICIO div id='n1-Principal' -->
+<div id="n1" style="width: 100%; height: 100%; position:relative">
+
+<!-- INICIO div id="n2-header" -->
+<div id="n2-header" style="position: relative;">
+<table width='100%' border=1 cellspacing="0" cellpadding="0" style="border:3px solid lime;border-radius:5px;font-family: montserrat; position: relative; ">
+<tr  style='font-weight: bold;color:whitesmoke;background-color: grey;opacity:.7;'> 
+<td style='width: 40%' align=center><input type="text" id="agora2" style='width:250px;text-align: center;' title='hora' readonly value="....">
+<td style='width: 18%' align=center cellpadding=5 cellspacing=3><font size=4>BaZe - Data 4 CMMaia 
+<td>
+<table id=tal width='100%'><tr><td>
+<td style='width:100%;' id=metalarm_old></table>
+</table>
+</div>
+<!-- FIM div id="n2-header" -->
+
+
+<!-- INICIO div id='n3-Graphic' -->
+<div id='n3-Graphic' class='div-left' align="center">
+
+<div id=chartsad1 align=center>
+<br>
+<button id="temp" class="myButton" onclick="alterarSerie()">Temperatura</button>
+<button id="pressao" class="myButton" onclick="alterarSerie()">Pressao</button>
+<button id="humidade" class="myButton" onclick="alterarSerie()">Humidade</button>
+<button id="nebulosidade" class="myButton" onclick="alterarSerie()">Nebulosidade</button>
+<button id="vento" class="myButton" onclick="alterarSerie()">Vento</button>
+<button id="ventodir" class="myButton" onclick="alterarSerie()">Vento Direcao</button>
+<button id="vis" class="myButton" onclick="alterarSerie()">Visibilidade</button>
+<br>
+<br>
+</div>
+
+<table border=0 width='100%' style='border: 2px solid green; border-radius: 10px;'>
+<tR><td align=center>
+
+<h3>Tipo de Grafico</h3><br>
+
+  <input type="radio" id="linha" name="tipog" value="linha" onclick="gog()" checked>
+  <label for="tipog">Linha</label><br>
+  <input type="radio" id="barras" name="tipog" value="barras" onclick="gog()">
+  <label for="tipog">Barras</label><br>
+
+
+<hr>
+<select id=serie onselect="getdata()" onchange='getdata()'></select>
+
+<script>
+	function gog()
+	{
+		console.log('gog')
+		if (document.getElementById("linha").checked) {cplot()}
+			else {cplot2()}		
+	}
+</script>
+
+<script>
+	function gog()
+	{
+		console.log('gog')
+		if (document.getElementById("linha").checked) {cplot()}
+			else {cplot2()}
+	}
+</script>
+
+<td align=center>
+
+<div id=chart1 width='50%'  style='width:90%;border:1px dotted lime;min-height: 50%;min-width:500px;' valign=middle><br><br><br><br>
+			<img src='./pics/Spinner-1s-131px.gif'>
+			<br>[Loading...]<br></div><br>
+			<div id=lech>__</div>
+
+</table>
+</div>
+<!-- FIM div id='n3-Graphic' -->
+
+
+<!-- INICIO div id='n4-Maps' -->
+<div id='n4-Maps' class='div-right' align="center">
+	<h1>Localização</h1>
+	<!-- Divisão do MAPA que será substituida pela div map -->
+	<div id="weathermap"></div>
+</div>
+<!-- FIM div id='n4-Maps' -->
+
+<!-- QRCode -->
+<div id=fundo class="footer" align="right">
+	<img src='http://baze.cm-maia.pt/BaZe/videowall/pics/BaZe2022.png' height="90%" ><br>
+	<a href='http://baze.cm-maia.pt/BaZe' title='Página Oficial BaZe'>+ info</a>
+</div>
+<!-- QRCode-->
+
+<script>
+var agorah;
+function set0()
+{ 
+   document.getElementById('agora2').value= Date().toString().substring(0,24);
+   agorah=setTimeout(function(){ set0(); },5000)
+}
+set0()
+
+</script>
+<script src=kvcall.js></script>
+
+<!-- FIM div id='n1-Principal' -->
+</div>
+
+</body>
+</html>
+
+
+
+
