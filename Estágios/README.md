@@ -4,19 +4,29 @@ This is a compilation of the Reports produced in Curricular Internships in the c
 
 ## List of Reports
 
-* 2021
- - Pedro Maia, IPMaia ["RELATÓRIO FINAL"]('Pedro%20Maia.docx') 
- - Fábio Azevedo, IPMaia ["Relatório final"]("Fabio%20Azevedo.pdf")
- - Hugo Lima, IPMaia ["Relatório final"]("Hugo%20Lima.pdf")]
- - Tânia Corrria, FLUP/FEUP, ["FONTES E VISUALIZAÇÃO DE DADOS EM CONTEXTO SMART CITY"]("Tania%20Correia%20(Relatorio).docx"), ["Anexos"]("Tania%20Correia%20(Anexos).pdf")
- - Guilherme Rocha, FLUP/FEUP, ["Interfaces de Visualização em Contexto Smart City: Município da Maia"]("Guilherme%20Rocha%20(Relatorio).pdf"), ["Anexos"]("Guilherme%20Rocha%20(Anexos).pdf")
- - Miguel Costa, FCUP ["Interfaces de Visualização em Contexto Smart
-City"]("./Miguel Costa.pdf")
- - José Almeida, FCUP ["Recolha e tratamento de dados para mobilidade em contexto de cidade inteligente"]("José%20Almeida.pdf")
- - Jorge Sousa, FCUP ["Interfaces de visualização em contexto Smart City(Câmara Municipal da Maia)"]("Jorge%20Sousa.docx")
- - João Nuno Araújo, FCUP ["Construção de uma base de dados descentralizada em contexto Smart City"]("João%20Nuno%20Araújo.docx")
+- 2021
+  - Pedro Maia, IPMaia ["RELATÓRIO FINAL"]('Pedro%20Maia.docx') 
+  - Fábio Azevedo, IPMaia ["Relatório final"]("Fabio%20Azevedo.pdf")
+  - Hugo Lima, IPMaia ["Relatório final"]("Hugo%20Lima.pdf")
+  - Tânia Corrria, FLUP/FEUP, ["FONTES E VISUALIZAÇÃO DE DADOS EM CONTEXTO SMART CITY"]("Tania%20Correia%20(Relatorio).docx"), ["Anexos"]("Tania%20Correia%20(Anexos).pdf")
+  - Guilherme Rocha, FLUP/FEUP, ["Interfaces de Visualização em Contexto Smart City: Município da Maia"]("Guilherme%20Rocha%20(Relatorio).pdf"), ["Anexos"]("Guilherme%20Rocha%20(Anexos).pdf")
+  - Miguel Costa, FCUP ["Interfaces de Visualização em Contexto Smart City"]("Miguel%20Costa.pdf")
+  - José Almeida, FCUP ["Recolha e tratamento de dados para mobilidade em contexto de cidade inteligente"]("José%20Almeida.pdf")
+  - Jorge Sousa, FCUP ["Interfaces de visualização em contexto Smart City(Câmara Municipal da Maia)"]("Jorge%20Sousa.docx")
+  - João Nuno Araújo, FCUP ["Construção de uma base de dados descentralizada em contexto Smart City"]("João%20Nuno%20Araújo.docx")
+  - Daniela Cunha, FCUP ["Relatório de Estágio Curricular: Base de dados Descentralizada"]("Daniela%20Cunha.pdf")
 
+- 2022
+  - Irina Lopes, FLUP/FEUP ["RELATÓRIO FINAL"]("Irina%20Lopes.docx") ["Suplemento"]("Irina%20Lopes%20(Suplemento).docx")
+  - Bruno Castro, FLUP/FEUP ["Indicadores ISO 37120 - Desenvolvimento sustentável das comunidades: indicadores de serviços e qualidade de vida da cidade"]("Bruno%20Castro.pdf")
 
+- 2023
+  - Daniel Silva, Agrupamento de Escolas do Castêlo da Maia, ["RELATÓRIO FINAL DA FORMAÇÃO EM CONTEXTO DE TRABALHO (ANO II)"]("Daniel%20Silva.pdf")
+  - Diogo Simões, Agrupamento de Escolas do Castêlo da Maia, ["RELATÓRIO FINAL DA FORMAÇÃO EM CONTEXTO DE TRABALHO (ANO II)"]("Diogo%20Simoes.pdf")
+  - Erico Alfama, ISMAI ["Utilização da infraestrutura LoRaWan existente no Concelho"]("Erico%20Alfama.pdf")
+  - Pedro Fiel, ISMAI ["Relatório Final"]("Pedro%20Simba%20Fiel.docx")
+  - Diogo Sofia, IPMAIA ["ESTÁGIO DESENVOLVIDO NA ENTIDADE CAMARA MUNICIPAL DA MAIA"]("Diogo%20Sofia.pdf")
+  - Nelson Proença, IPMAIA ["ESTÁGIO DESENVOLVIDO NA CÂMARA DA MAIA"]("Nelson%20Proença.pdf")
 
 
 PCP, 27/9/2023
