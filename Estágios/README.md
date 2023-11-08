@@ -27,6 +27,7 @@ This is a compilation of the Reports produced in Curricular Internships in the c
   - Pedro Fiel, ISMAI ["Relatório Final"]("Pedro%20Simba%20Fiel.docx")
   - Diogo Sofia, IPMAIA ["ESTÁGIO DESENVOLVIDO NA ENTIDADE CAMARA MUNICIPAL DA MAIA"]("Diogo%20Sofia.pdf")
   - Nelson Proença, IPMAIA ["ESTÁGIO DESENVOLVIDO NA CÂMARA DA MAIA"]("Nelson%20Proença.pdf")
+  - Bruno Soares, UMAIA ["ESTÁGIO DESENVOLVIDO NA CÂMARA DA MAIA"]("Bruno%20Soares%20a036152%20Relatório%20de%20Estágio.pdf")
 
 
 PCP, 27/9/2023
