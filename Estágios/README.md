@@ -30,5 +30,8 @@ This is a compilation of the Reports produced in Curricular Internships in the c
   - Bruno Soares, UMAIA ["ESTÁGIO DESENVOLVIDO NA CÂMARA DA MAIA"](Bruno%20Soares%20a036152%20Relatório%20de%20Estágio.pdf)
   - Bruno Soare, UMaia ["RELATÓRIO FINAL FORMAÇÃO EM CONTEXTO DE TRABALHO DA LICENCIATURA EM INFORMÁTICA"](Bruno%20Soares%20a036152%20Relatório%20de%20Estágio.pdf)
 
+- 2024 
+  - Miguel Medeiros, Agrupamento de Escolas do Castêlo, ["Tratamento e Visualização de Dados OpenDataSoft e Power BI"]("Relatorio_FCT_-_TGPSI_23_24_Miguel%20Medeiros.pdf")
 
-PCP, 27/9/2023
+
+PCP, 18/5/2024
