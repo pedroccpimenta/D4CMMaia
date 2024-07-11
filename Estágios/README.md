@@ -33,6 +33,8 @@ This is a compilation of the Reports produced in Curricular Internships in the c
 - 2024 
   - Miguel Medeiros, Agrupamento de Escolas do Castêlo da Maia, ["Tratamento e Visualização de Dados OpenDataSoft e Power BI"](Relatorio_FCT_-_TGPSI_23_24_Miguel%20Medeiros.pdf)
   - Cristiano Monteiro, Agrupamento de Escolas do Castêlo da Maia, ["Integração e Visualização de Dados"](Cristiano_Monteiro_FCT_23_24.pdf)
+  - Carolina Durães, FLUP/FEUP, ["Visualização de Dados Urbanos"](Tiago%20Prata%20-%20Visualização%20de%20Dados%20Urbanos) 
+  - Tiago Prata, FLUP/FEUP, ["Adopção da plataforma OpenDataSoft para publicação de dados abertos"](Carolina%20Durães%20-%20Adopção%20da%20plataforma%20OpenDataSoft%20para%20publicação%20de%20dados%20abertos) 
 
 
-PCP, 23/5/2024
+PCP, 11/7/2024
