@@ -9,4 +9,6 @@ Sections:
 * Data analysis: all sorts of analysing / displaying data (detail/summmary, private/public dashboards, etc)
 * Auxiliary: all topics not included in the previous sections
 
-PCP, 4/8/2022
+Full examples at [https://baze.cm-maia.pt/](https://baze.cm-maia.pt/)
+
+PCP, 24/8/2024
