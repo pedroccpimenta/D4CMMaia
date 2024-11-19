@@ -28,9 +28,8 @@ This is a compilation of the Reports produced in Curricular Internships in the c
   - Diogo Sofia, IPMAIA ["ESTÁGIO DESENVOLVIDO NA ENTIDADE CAMARA MUNICIPAL DA MAIA"]("Diogo%20Sofia.pdf")
   - Nelson Proença, IPMAIA ["ESTÁGIO DESENVOLVIDO NA CÂMARA DA MAIA"]("Nelson%20Proença.pdf")
   - Bruno Soares, UMAIA ["ESTÁGIO DESENVOLVIDO NA CÂMARA DA MAIA"](Bruno%20Soares%20a036152%20Relatório%20de%20Estágio.pdf)
-  
-
-- 2024 
+ 
+ - 2024 
   - Miguel Medeiros, Agrupamento de Escolas do Castêlo da Maia, ["Tratamento e Visualização de Dados OpenDataSoft e Power BI"](Relatorio_FCT_-_TGPSI_23_24_Miguel%20Medeiros.pdf)
   - Cristiano Monteiro, Agrupamento de Escolas do Castêlo da Maia, ["Integração e Visualização de Dados"](Cristiano_Monteiro_FCT_23_24.pdf)
   - Carolina Durães, FLUP/FEUP, ["Adopção da plataforma OpenDataSoft para publicação de dados abertos"](Carolina%20Durães%20-%20Adopção%20da%20plataforma%20OpenDataSoft%20para%20publicação%20de%20dados%20abertos.pdf) 
