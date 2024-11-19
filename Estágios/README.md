@@ -35,6 +35,6 @@ This is a compilation of the Reports produced in Curricular Internships in the c
   - Cristiano Monteiro, Agrupamento de Escolas do Castêlo da Maia, ["Integração e Visualização de Dados"](Cristiano_Monteiro_FCT_23_24.pdf)
   - Carolina Durães, FLUP/FEUP, ["Adopção da plataforma OpenDataSoft para publicação de dados abertos"](Carolina%20Durães%20-%20Adopção%20da%20plataforma%20OpenDataSoft%20para%20publicação%20de%20dados%20abertos.pdf) 
   - Tiago Prata, FLUP/FEUP, ["Adopção da plataforma OpenDataSoft para publicação de dados abertos"](Tiago%20Prata%20-%20Visualização%20de%20Dados%20Urbanos.pdf) 
+  - Catarina Moreira, EPVC, ["Relatório de Formação em Contexto de Trabalho"](Relatório%20de%20Estágio%20Catarina%20Moreira.pdf)
 
-
-PCP, 11/7/2024
+PCP, 19/11/2024
