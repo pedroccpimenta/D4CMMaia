@@ -36,4 +36,8 @@ This is a compilation of the Reports produced in Curricular Internships in the c
   - Tiago Prata, FLUP/FEUP, ["Adopção da plataforma OpenDataSoft para publicação de dados abertos"](Tiago%20Prata%20-%20Visualização%20de%20Dados%20Urbanos.pdf) 
   - Catarina Moreira, EPVC, ["Relatório de Formação em Contexto de Trabalho"](Relatório%20de%20Estágio%20Catarina%20Moreira.pdf)
 
-PCP, 19/11/2024
+  - 2025  
+   - David Codêço, Agrupamento de Escolas do Castêlo da Maia, [FORMAÇÃO EM CONTEXTO DE TRABALHO](Relatório%20Estágio%20David%20Codêço.pdf)
+   - Jorge Ávila, Agrupamento de Escolas do Castêlo da Maia, [FORMAÇÃO EM CONTEXTO DE TRABALHO](Relatório%20de%20Estágio%20Jorge%20Avila.pdf)
+
+PCP, 24/03/2025
